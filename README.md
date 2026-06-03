@@ -307,7 +307,7 @@
 
     <div id="install-banner" class="install-banner">
         <div style="display:flex; align-items:center; gap:12px;">
-            <img src="https://i.postimg.cc/76mz1v2j/file-0000000090a471fa84cbecd48a774885.png" style="width:35px; height:35px; border-radius:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            <img src="https://i.postimg.cc/52vLtJBM/1000095487-(2).png" style="width:35px; height:35px; border-radius:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
             <div>
                 <h4 style="margin:0; color:var(--gold); font-size:13px; font-family:'Cinzel';">MND Tracking App</h4>
                 <p style="margin:0; color:#aaa; font-size:10px;">Install for full-screen experience</p>
@@ -742,7 +742,7 @@
             "display": "standalone",
             "background_color": "#050508",
             "theme_color": "#050508",
-            "icons": [{"src": "https://i.postimg.cc/76mz1v2j/file-0000000090a471fa84cbecd48a774885.png", "sizes": "512x512", "type": "image/png"}]
+            "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
         const manifestLink = document.createElement('link');
@@ -1739,11 +1739,11 @@
             if ("Notification" in window && Notification.permission === "granted" && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(function(registration) {
                     registration.showNotification(title, {
-                        body: body, icon: "https://i.postimg.cc/76mz1v2j/file-0000000090a471fa84cbecd48a774885.png", vibrate: [200, 100, 200], tag: "mnd-logistics", renotify: true
+                        body: body, icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", vibrate: [200, 100, 200], tag: "mnd-logistics", renotify: true
                     });
                 });
             } else if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: body, icon: "https://i.postimg.cc/76mz1v2j/file-0000000090a471fa84cbecd48a774885.png" });
+                new Notification(title, { body: body, icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png" });
             }
 
             let container = document.getElementById('toast-container');
