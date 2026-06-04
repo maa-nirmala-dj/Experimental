@@ -44,12 +44,10 @@
             --icon-gray: #9ca3af;
         }
 
-        /* Prevent Pull-To-Refresh globally using overscroll-behavior-y: none */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
         body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
-        input, textarea { user-select: auto; -webkit-user-select: auto; } /* Allow typing */
+        input, textarea { user-select: auto; -webkit-user-select: auto; }
 
-        /* Cinematic Background */
         .bg-map {
             position: fixed; inset: 0; z-index: -1; opacity: 0.15;
             background-image: 
@@ -72,7 +70,7 @@
         .toast.success { border-color: var(--neon-green); }
         .toast.error { border-color: var(--danger); }
         
-        .native-push { background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 18px; padding: 12px 15px; width: 92%; max-width: 400px; display: flex; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2); animation: dropDownPush 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUpPush 0.5s 6s forwards; }
+        .native-push { background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 18px; padding: 12px 15px; width: 92%; max-width: 400px; display: flex; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2); animation: dropDownPush 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUpPush 0.5s 6s forwards; pointer-events: auto; }
         .native-push-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #FFD700); display: flex; align-items: center; justify-content: center; color: #000; font-size: 20px; box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
         .native-push-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
         .native-push-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; color: #fff; margin: 0 0 3px 0; text-transform: uppercase; letter-spacing: 1px; display:flex; justify-content:space-between; }
@@ -84,17 +82,18 @@
         @keyframes dropDownPush { from { opacity: 0; transform: translateY(-50px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
         @keyframes slideUpPush { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-50px) scale(0.95); } }
 
-        /* PWA Install Banner UI */
         .install-banner { position: fixed; top: 0; left: 0; right: 0; background: rgba(20,20,25,0.98); backdrop-filter: blur(15px); padding: 15px 20px; z-index: 99999999; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .install-banner.show { transform: translateY(0); }
 
         /* =========================================================================
-           VIEW MANAGER (Strict SPA) - NATIVE FULL SCROLL
+           VIEW MANAGER & FOOTER
            ========================================================================= */
-        .view-container { display: none; flex-direction: column; align-items: center; width: 100%; height: 100dvh; max-width: 100vw; padding: 15px 12px 60px; animation: fadeInView 0.5s ease forwards; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; }
+        .view-container { display: none; flex-direction: column; align-items: center; width: 100%; height: 100dvh; max-width: 100vw; padding: 15px 12px 20px; animation: fadeInView 0.5s ease forwards; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior-y: none; }
         .active-view { display: flex !important; }
         @keyframes fadeInView { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 10px; }
+
+        .app-footer { width: 100%; text-align: center; font-family: 'Cinzel', serif; font-size: 10px; color: rgba(212, 175, 55, 0.6); margin-top: auto; padding-top: 30px; letter-spacing: 1px; font-weight: 700; flex-shrink: 0; }
 
         /* =========================================================================
            UI COMPONENTS (Inputs, Buttons, Cards)
@@ -102,7 +101,6 @@
         .app-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: clamp(22px, 6vw, 28px); font-weight: 900; letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 15px var(--gold-glow); text-align: center; }
         .app-subtitle { color: #aaa; font-size: 12px; margin-bottom: 25px; line-height: 1.4; font-weight: 300; text-align: center; padding: 0 10px; }
 
-        /* Fix Flexbox Layouts scaling out of viewport */
         div[style*="display:flex"] { max-width: 100%; box-sizing: border-box; }
         div[style*="display:flex"] > input, div[style*="display:flex"] > .mn-input { min-width: 0; }
 
@@ -120,7 +118,7 @@
         .btn-gold { background: linear-gradient(135deg, var(--gold) 0%, #FFD700 100%); color: #000; box-shadow: 0 5px 25px var(--gold-glow); }
         .btn-green { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #fff; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3); }
         .btn-dark { background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: var(--gold); backdrop-filter: blur(5px); }
-        .btn-danger { background: rgba(255,51,51,0.1); border: 1px solid var(--danger); color: var(--danger); margin-top: 10px; }
+        .btn-danger { background: rgba(255,51,51,0.1); border: 1px solid var(--danger); color: var(--danger); }
 
         .dash-header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 12px; flex-shrink: 0; overflow: hidden; }
         .status-badge { background: rgba(0, 250, 154, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 10px; border-radius: 30px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 250, 154, 0.2); white-space: nowrap; }
@@ -131,47 +129,37 @@
         .card h3 { color: var(--gold); font-family: 'Cinzel'; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
         /* =========================================================================
-           WHATSAPP-STYLE CHAT ENGINE (PERFECTED WITH SWIPE & LONG PRESS)
+           WHATSAPP-STYLE CHAT ENGINE
            ========================================================================= */
         .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; height: 75vh; max-height: 800px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
         
         .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        
-        /* Subtle Chat Background Pattern */
         .chat-area { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding: 15px 12px; display: flex; flex-direction: column; gap: 10px; background-color: var(--wa-bg); background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 20px 20px; scroll-behavior: smooth; overscroll-behavior-y: none; }
         
-        /* Swipe to Reply Wrapper */
         .bubble-wrapper { display: flex; align-items: center; width: 100%; position: relative; transition: background 0.2s; }
         .reply-swipe-icon { position: absolute; left: 10px; font-size: 18px; color: var(--wa-text); background: rgba(0,0,0,0.5); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1; }
         
-        /* WhatsApp Chat Bubbles */
         .chat-bubble { max-width: 85%; padding: 6px 8px 6px 12px; border-radius: 12px; position: relative; font-size: 14px; line-height: 1.4; color: var(--wa-text); display: inline-block; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.3); font-family: 'Outfit', sans-serif; font-weight: 400; z-index: 2; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .chat-bubble:active { filter: brightness(1.1); }
         
         .chat-bubble.sent { align-self: flex-end; background: var(--wa-sent); border-top-right-radius: 0; margin-left: auto; } 
         .chat-bubble.received { align-self: flex-start; background: var(--wa-received); border-top-left-radius: 0; margin-right: auto; } 
         
-        /* Time & Read Receipts */
         .chat-time { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--wa-time); float: right; margin: 6px -2px -2px 10px; font-family: 'Outfit'; }
         .msg-status { font-size: 11px; color: #8696a0; }
-        .msg-status.read { color: #53bdeb; } /* WhatsApp Blue Tick */
+        .msg-status.read { color: #53bdeb; } 
         
-        /* Reply Embedded inside Bubble */
         .chat-reply-context { background: rgba(0,0,0,0.25); border-left: 4px solid var(--neon-green); padding: 5px 8px; border-radius: 6px; font-size: 12px; color: #ccc; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .chat-reply-context .sender { color: var(--neon-green); font-weight: 700; margin-bottom: 2px; font-size: 11px; }
         .received .chat-reply-context { border-left-color: var(--neon-cyan); }
         .received .chat-reply-context .sender { color: var(--neon-cyan); }
         
-        /* Reply Banner hovering above input */
         .reply-banner { display: none; background: #202c33; padding: 8px 12px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 5; }
         .reply-banner-content { flex-grow: 1; border-left: 4px solid var(--neon-green); padding-left: 10px; background: rgba(0,0,0,0.2); border-radius: 4px 8px 8px 4px; padding-top: 5px; padding-bottom: 5px; }
         .reply-banner-content .rep-title { font-size: 11px; color: var(--neon-green); font-weight: bold; margin-bottom: 2px; }
         .replying-to-text { color: #ccc; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
         .cancel-reply-btn { background: transparent; border: none; color: #8696a0; font-size: 18px; cursor: pointer; padding: 5px; }
 
-        /* =========================================================================
-           ADVANCED MODERN PILL INPUT & RECORDING
-           ========================================================================= */
         .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(255,255,255,0.03); width: 100%; box-sizing: border-box; }
         
         .chat-modern-pill { display: flex; align-items: center; background: var(--input-bg); border-radius: 30px; padding: 5px 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 100%; transition: all 0.3s ease; box-sizing: border-box; }
@@ -193,20 +181,17 @@
         .modern-send-btn:active { transform: scale(0.9); }
         .modern-send-btn i { transform: translateX(-1px); }
 
-        /* Voice Recording UI */
         .recording-ui { display: none; align-items: center; justify-content: space-between; width: 100%; background: #2a3942; border-radius: 30px; padding: 5px 6px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
         .blinking-dot { width: 10px; height: 10px; background: var(--danger); border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 6px; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .rec-timer { color: var(--danger); font-family: 'Orbitron', monospace; font-size: 13px; font-weight: bold; flex-grow: 1; padding-left: 4px; }
 
-        /* Sticker Drawer */
         .sticker-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #1f2937; border-radius: 14px; padding: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(255,255,255,0.05); }
         .sticker-drawer.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-height: 180px; overflow-y: auto; padding: 5px; }
         .sticker-grid img { width: 100%; height: auto; cursor: pointer; transition: 0.2s; border-radius: 8px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
         .sticker-grid img:hover { transform: scale(1.15); }
 
-        /* Attachment Menu Drawer */
         .attachment-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #1f2937; border-radius: 14px; padding: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(255,255,255,0.05); }
         .attachment-drawer.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .attach-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
@@ -214,7 +199,6 @@
         .attach-icon-circle { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .attach-item span { font-size: 10px; color: #d1d5db; font-family: 'Outfit'; font-weight: 500; }
         
-        /* Attachment Colors */
         .bg-doc { background: #6366f1; } .bg-cam { background: #ec4899; } .bg-gal { background: #a855f7; }
         .bg-aud { background: #f97316; } .bg-loc { background: #10b981; } .bg-con { background: #3b82f6; }
 
@@ -395,9 +379,14 @@
                 <input type="password" id="login-pin" class="mn-input pin-style" placeholder="6 DIGIT PIN" maxlength="6" autocomplete="off">
             </div>
 
-            <button class="mn-btn btn-gold" id="login-btn" onclick="processLogin(event)"><i class="fas fa-fingerprint"></i> INITIATE HANDSHAKE</button>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="mn-btn btn-dark" id="clear-btn" onclick="clearLogin(event)" style="flex: 0.5;"><i class="fas fa-eraser"></i> STOP & CLEAR</button>
+                <button class="mn-btn btn-gold" id="login-btn" onclick="processLogin(event)" style="flex: 1.5;"><i class="fas fa-fingerprint"></i> INITIATE HANDSHAKE</button>
+            </div>
+            
             <p id="login-error" style="display:none; color:var(--danger); font-size:12px; font-weight:bold; margin-top:12px; text-align:center;"></p>
         </div>
+        <div class="app-footer">Powered by Maa Nirmala DJ</div>
     </div>
 
     <div id="view-admin" class="view-container">
@@ -444,7 +433,15 @@
             </div>
         </div>
 
-        <button class="mn-btn btn-danger" onclick="systemLogout(event)"><i class="fas fa-sign-out-alt"></i> TERMINATE SYSTEM</button>
+        <div style="width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; flex-shrink: 0;">
+            <button class="mn-btn btn-danger" onclick="systemLogout(event)">
+                <i class="fas fa-power-off"></i> TERMINATE SYSTEM
+            </button>
+            <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="mn-btn btn-dark" style="text-decoration: none;">
+                <i class="fas fa-globe"></i> VISIT OFFICIAL WEBSITE
+            </a>
+        </div>
+        <div class="app-footer">Powered by Maa Nirmala DJ</div>
     </div>
 
     <div id="view-admin-session" class="view-container">
@@ -590,6 +587,7 @@
                 </div>
             </div>
         </div>
+        <div class="app-footer">Powered by Maa Nirmala DJ</div>
     </div>
 
     <div id="view-client" class="view-container" style="padding: 15px 10px;">
@@ -725,26 +723,42 @@
                         <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('client')"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
-                
-                <button class="mn-btn btn-danger" style="margin-top: 12px; width: 100%; border-radius: 12px; padding: 10px; font-size: 11px; letter-spacing: 1px;" onclick="systemLogout(event)">
-                    <i class="fas fa-power-off"></i> DISCONNECT & LOGOUT
-                </button>
             </div>
         </div>
+        
+        <div style="width: 100%; max-width: 600px; display: flex; flex-direction: column; gap: 10px; margin-top: 10px; flex-shrink: 0;">
+            <button class="mn-btn btn-danger" onclick="systemLogout(event)">
+                <i class="fas fa-power-off"></i> DISCONNECT & LOGOUT
+            </button>
+            <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="mn-btn btn-dark" style="text-decoration: none;">
+                <i class="fas fa-globe"></i> VISIT OFFICIAL WEBSITE
+            </a>
+        </div>
+        <div class="app-footer">Powered by Maa Nirmala DJ</div>
     </div>
 
     <script>
-        // --- AUTO-LOGIN SYSTEM (Added Feature) ---
+        // --- AUTO-LOGIN SYSTEM ---
         window.addEventListener('DOMContentLoaded', () => {
             const savedPhone = localStorage.getItem('mnd_auth_phone');
             const savedPin = localStorage.getItem('mnd_auth_pin');
             if (savedPhone && savedPin) {
                 document.getElementById('login-phone').value = savedPhone;
                 document.getElementById('login-pin').value = savedPin;
-                // Add a small delay to ensure DOM is fully ready
                 setTimeout(() => processLogin(), 300);
             }
         });
+
+        // --- NEW FEATURE: CLEAR LOGIN INPUTS ---
+        function clearLogin(e) {
+            if(e) e.stopPropagation();
+            document.getElementById('login-phone').value = '';
+            document.getElementById('login-pin').value = '';
+            document.getElementById('login-error').style.display = 'none';
+            const btn = document.getElementById('login-btn');
+            btn.innerHTML = '<i class="fas fa-fingerprint"></i> INITIATE HANDSHAKE';
+            btn.disabled = false;
+        }
 
         // --- SAFE SVG FOR MAP PIN FALLBACK ---
         const mapSvgStr = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23202c33'/><path d='M0,50 Q100,150 200,50 T400,50' stroke='%23005c4b' stroke-width='3' fill='none'/><path d='M0,150 Q100,50 200,150 T400,150' stroke='%23005c4b' stroke-width='3' fill='none'/><circle cx='200' cy='100' r='30' fill='rgba(0, 229, 255, 0.15)'/><circle cx='200' cy='100' r='8' fill='%2300E5FF'/><path d='M200,100 L200,120' stroke='%2300E5FF' stroke-width='4'/><text x='200' y='145' font-family='sans-serif' font-size='16' fill='%2300E5FF' text-anchor='middle' font-weight='bold'>📍 Live Location</text></svg>`;
@@ -757,7 +771,7 @@
             "start_url": ".",
             "display": "standalone",
             "background_color": "#ffffff",
-"theme_color": "#ffffff",
+            "theme_color": "#ffffff",
             "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
@@ -859,9 +873,9 @@
             if (!str) return "";
             return String(str).replace(/[&<>'"]/g, 
                 tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
+                    '&': '&',
+                    '<': '<',
+                    '>': '>',
                     "'": '&#39;',
                     '"': '&quot;'
                 }[tag] || tag)
@@ -1097,7 +1111,6 @@
             sendMediaMessage(role, 'sticker', src);
         }
 
-        // --- FIXED: CLIENT EVENT LOCATION SHARE ---
         function clientShareLocation(e) {
             if(e) e.stopPropagation();
             if(!currentClientPhone) return;
@@ -1204,12 +1217,11 @@
         let globalCallListenerRef = null;
         let globalCallListenerCb = null;
 
-        // Sounds
         let ringbackInterval = null;
         let ringerInterval = null;
         let audioCtx = null;
         
-        let currentFacingMode = 'user'; // For Camera Flip Feature
+        let currentFacingMode = 'user'; 
 
         function playRingbackTone() {
             if(audioCtx) return;
@@ -1241,6 +1253,7 @@
         }
 
         function playRingtone() {
+            if(navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000]); // Premium vibration pattern
             if(audioCtx) return;
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1264,6 +1277,7 @@
         }
 
         function stopRingtone() {
+            if(navigator.vibrate) navigator.vibrate(0);
             if(ringerInterval) { clearInterval(ringerInterval); ringerInterval = null; }
             if(audioCtx) { audioCtx.close(); audioCtx = null; }
         }
@@ -1291,15 +1305,13 @@
             else document.getElementById('local-video').style.display = 'block';
 
             try {
-                // FIXED SCREEN SHARE LOGIC: Determine media type (Video, Audio, or Screen Share)
                 if (type === 'screen') {
                     try {
                         RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ 
                             video: true, 
-                            audio: false // Fixes most strict browser rejections for screen sharing
+                            audio: false
                         });
                         
-                        // We gracefully attempt to add the microphone separately so they can still talk while sharing
                         try {
                             const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
                             const audioTrack = micStream.getAudioTracks()[0];
@@ -1330,7 +1342,6 @@
 
                 RTC.localStream.getTracks().forEach(track => RTC.pc.addTrack(track, RTC.localStream));
                 
-                // If sharing screen, handle the user clicking "Stop sharing" on the browser native bar
                 if (type === 'screen') {
                     const screenTrack = RTC.localStream.getVideoTracks()[0];
                     if (screenTrack) {
@@ -1410,6 +1421,9 @@
                 
                 if(data && data.status === 'ringing' && data.caller !== myRole && !RTC.pc) {
                     playRingtone();
+                    // Wake app if in background through service worker trigger setup
+                    showPushNotification("Incoming Call", `Incoming call from ${data.caller === 'admin' ? 'HQ Dispatch' : 'Client'}. Tap to open.`);
+                    
                     document.getElementById('incoming-call-name').innerText = data.caller === 'admin' ? 'HQ Dispatch' : (document.getElementById('session-c-name')?.innerText || 'Client');
                     document.getElementById('incoming-call-overlay').classList.add('active');
                     window.incomingCallData = { offer: data.offer, type: data.type, role: myRole, targetPhone: targetPhone };
@@ -1449,7 +1463,6 @@
             else document.getElementById('local-video').style.display = 'block';
 
             try {
-                // If caller is sharing screen, receiver responds with video webcam
                 currentFacingMode = 'user';
                 RTC.localStream = await navigator.mediaDevices.getUserMedia({ 
                     video: (data.type === 'video' || data.type === 'screen') ? { facingMode: currentFacingMode } : false, 
@@ -1567,14 +1580,12 @@
             }
         }
 
-        // --- NEW FEATURE: FLIP CAMERA ---
         async function flipCamera() {
             if (!RTC.localStream || !RTC.pc) return;
             
             const videoTrack = RTC.localStream.getVideoTracks()[0];
             if (!videoTrack) return;
             
-            // Do not attempt to flip if it's a screen share
             if (videoTrack.label && videoTrack.label.toLowerCase().includes('screen')) {
                 showToast("Cannot flip camera during screen sharing.", "error");
                 return;
@@ -1749,10 +1760,42 @@
         function handleMouseLeave(e) { clearTimeout(pressTimer); }
 
 
-        // --- PUSH NOTIFICATIONS SYSTEM ---
+        // --- PUSH NOTIFICATIONS SYSTEM WITH INLINE WORKER ENABLEMENT ---
+        const swCode = `
+        self.addEventListener('push', function(event) {
+            const data = event.data ? event.data.json() : {};
+            event.waitUntil(
+                self.registration.showNotification(data.title || 'MND Track', {
+                    body: data.body || 'New update available.',
+                    icon: 'https://i.postimg.cc/52vLtJBM/1000095487-(2).png',
+                    vibrate: [200, 100, 200, 100, 200, 100, 200],
+                    requireInteraction: true
+                })
+            );
+        });
+        self.addEventListener('notificationclick', function(event) {
+            event.notification.close();
+            event.waitUntil(
+                clients.matchAll({ type: 'window' }).then(windowClients => {
+                    for (let i = 0; i < windowClients.length; i++) {
+                        let client = windowClients[i];
+                        if (client.url === '/' && 'focus' in client) {
+                            return client.focus();
+                        }
+                    }
+                    if (clients.openWindow) {
+                        return clients.openWindow('/');
+                    }
+                })
+            );
+        });
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(function(registration) {
-                console.log('SW Registered');
+            navigator.serviceWorker.register(swUrl).then(function(registration) {
+                console.log('SW Registered for Wake/Push Handling');
             }).catch(function(error) {});
         }
 
@@ -1763,6 +1806,7 @@
         }
 
         function playPremiumChime() {
+            if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator(); const gain = ctx.createGain();
@@ -1780,7 +1824,7 @@
             if ("Notification" in window && Notification.permission === "granted" && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(function(registration) {
                     registration.showNotification(title, {
-                        body: body, icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", vibrate: [200, 100, 200], tag: "mnd-logistics", renotify: true
+                        body: body, icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", vibrate: [200, 100, 200, 100, 200], tag: "mnd-logistics", renotify: true, requireInteraction: true
                     });
                 });
             } else if ("Notification" in window && Notification.permission === "granted") {
@@ -1858,7 +1902,6 @@
 
             // Admin Logic
             if(ADMIN_NUMBERS.includes(phone) && pin === MASTER_PIN) {
-                // Save Admin Credentials locally
                 localStorage.setItem('mnd_auth_phone', phone);
                 localStorage.setItem('mnd_auth_pin', pin);
 
@@ -1880,7 +1923,6 @@
                 if (snapshot.exists()) {
                     const clientData = snapshot.val();
                     if(clientData.pin === pin || !clientData.pin) {
-                        // Save Client Credentials locally
                         localStorage.setItem('mnd_auth_phone', phone);
                         localStorage.setItem('mnd_auth_pin', pin);
 
@@ -1894,7 +1936,6 @@
                         processedUpdateKeys.clear(); processedChatKeys.clear();
                         isInitialLoad = true; isChatInitialLoad = true;
 
-                        // LIVE PRESENCE: Client Online
                         const presenceRef = db.ref(`trackings/${phone}/client_presence`);
                         presenceRef.set({ status: 'online', lastSeen: Date.now() });
                         presenceRef.onDisconnect().set({ status: 'offline', lastSeen: firebase.database.ServerValue.TIMESTAMP });
@@ -2020,12 +2061,11 @@
                 }
             });
 
-            // FIXED: Using valid Map links
             db.ref(`trackings/${currentAdminTargetPhone}/client_location`).on('value', (snap) => {
                 const card = document.getElementById('admin-client-loc-card');
                 if(snap.exists()) {
                     card.style.display = 'block'; const loc = snap.val();
-                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/maps?q=${loc.lat},${loc.lng}`;
+                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/maps?q=$${loc.lat},${loc.lng}`;
                 } else { card.style.display = 'none'; }
             });
 
@@ -2084,7 +2124,7 @@
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/maps?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://maps.google.com/maps?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
@@ -2253,7 +2293,6 @@
                 }
             });
 
-            // FIXED: MAP URL FOR IFRAME & BUTTON
             db.ref(`trackings/${currentClientPhone}/location`).on('value', (snapshot) => {
                 const badge = document.getElementById('client-conn-status');
                 if(snapshot.exists() && snapshot.val().status === 'online') {
@@ -2266,7 +2305,7 @@
                     
                     document.getElementById('map-loader-text').style.display = 'none';
                     document.getElementById('ext-map-link').style.display = 'block';
-                    document.getElementById('ext-map-link').href = `https://maps.google.com/maps?q=${data.lat},${data.lng}`;
+                    document.getElementById('ext-map-link').href = `https://maps.google.com/maps?q=$${data.lat},${data.lng}`;
 
                     const locDisp = document.getElementById('client-location-display');
                     if(data.locationName && data.locationName !== "Resolving...") {
@@ -2274,7 +2313,7 @@
                     }
 
                     if(Math.abs(data.lat - lastKnownLat) > 0.0001 || Math.abs(data.lng - lastKnownLng) > 0.0001) {
-                        const mapUrl = `https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`;
+                        const mapUrl = `https://maps.google.com/maps?q=$${data.lat},${data.lng}&z=15&output=embed`;
                         document.getElementById('client-map-iframe').src = mapUrl;
                         lastKnownLat = data.lat; lastKnownLng = data.lng;
                     }
@@ -2342,7 +2381,7 @@
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/maps?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://maps.google.com/maps?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
