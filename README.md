@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -755,9 +754,8 @@
             "short_name": "MND Track",
             "start_url": ".",
             "display": "standalone",
-           "background_color": "#ffffff",
+            "background_color": "#ffffff",
 "theme_color": "#ffffff",
-
             "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
@@ -1292,17 +1290,15 @@
 
             try {
                 // Determine media type (Video, Audio, or Screen Share)
-                                if (type === 'screen') {
+                if (type === 'screen') {
                     try {
-                        // FIX: Removed 'audio: true' to prevent crashes on systems that don't support system audio routing
-                        RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                        RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
                     } catch (e) {
-                        console.error("Screen Share Error:", e); // Helps you debug in browser console
-                        showToast("Screen share denied (Not supported on mobile).", "error");
+                        showToast("Screen sharing was denied or is unsupported.", "error");
                         endCallLocal();
                         return;
                     }
-                }else {
+                } else {
                     currentFacingMode = 'user';
                     RTC.localStream = await navigator.mediaDevices.getUserMedia({ 
                         video: type === 'video' ? { facingMode: currentFacingMode } : false, 
