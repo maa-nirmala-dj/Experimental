@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -170,7 +171,7 @@
         .cancel-reply-btn { background: transparent; border: none; color: #8696a0; font-size: 18px; cursor: pointer; padding: 5px; }
 
         /* =========================================================================
-           ADVANCED MODERN PILL INPUT & RECORDING (Based on User Screenshots)
+           ADVANCED MODERN PILL INPUT & RECORDING
            ========================================================================= */
         .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(255,255,255,0.03); width: 100%; box-sizing: border-box; }
         
@@ -351,10 +352,11 @@
             <p id="active-call-status" style="color:var(--neon-green); margin:5px 0 0 0; font-size:14px; font-family:'Orbitron';">Connecting...</p>
         </div>
 
-        <div style="position:absolute; bottom:40px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:25px; z-index:3;">
+        <div style="position:absolute; bottom:40px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:20px; z-index:3;">
             <button class="mn-btn" style="width:55px; height:55px; border-radius:50%; padding:0; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:#fff; border:1px solid rgba(255,255,255,0.3); font-size:20px;" onclick="toggleMic()" id="btn-toggle-mic"><i class="fas fa-microphone"></i></button>
             <button class="mn-btn btn-danger" style="width:70px; height:70px; border-radius:50%; padding:0; font-size:24px; box-shadow: 0 5px 20px rgba(255,51,51,0.5);" onclick="endCall()"><i class="fas fa-phone-slash"></i></button>
             <button class="mn-btn" style="width:55px; height:55px; border-radius:50%; padding:0; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:#fff; border:1px solid rgba(255,255,255,0.3); font-size:20px;" onclick="toggleCam()" id="btn-toggle-cam"><i class="fas fa-video"></i></button>
+            <button class="mn-btn" style="width:45px; height:45px; border-radius:50%; padding:0; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:#fff; border:1px solid rgba(255,255,255,0.3); font-size:16px;" onclick="flipCamera()"><i class="fas fa-sync-alt"></i></button>
         </div>
     </div>
 
@@ -518,6 +520,7 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
+                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'admin')"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'admin')"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'admin')"></i>
                 </div>
@@ -654,6 +657,7 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
+                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'client')"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'client')"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'client')"></i>
                 </div>
@@ -729,6 +733,18 @@
     </div>
 
     <script>
+        // --- AUTO-LOGIN SYSTEM (Added Feature) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedPhone = localStorage.getItem('mnd_auth_phone');
+            const savedPin = localStorage.getItem('mnd_auth_pin');
+            if (savedPhone && savedPin) {
+                document.getElementById('login-phone').value = savedPhone;
+                document.getElementById('login-pin').value = savedPin;
+                // Add a small delay to ensure DOM is fully ready
+                setTimeout(() => processLogin(), 300);
+            }
+        });
+
         // --- SAFE SVG FOR MAP PIN FALLBACK ---
         const mapSvgStr = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23202c33'/><path d='M0,50 Q100,150 200,50 T400,50' stroke='%23005c4b' stroke-width='3' fill='none'/><path d='M0,150 Q100,50 200,150 T400,150' stroke='%23005c4b' stroke-width='3' fill='none'/><circle cx='200' cy='100' r='30' fill='rgba(0, 229, 255, 0.15)'/><circle cx='200' cy='100' r='8' fill='%2300E5FF'/><path d='M200,100 L200,120' stroke='%2300E5FF' stroke-width='4'/><text x='200' y='145' font-family='sans-serif' font-size='16' fill='%2300E5FF' text-anchor='middle' font-weight='bold'>📍 Live Location</text></svg>`;
         const mapDataURI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(mapSvgStr);
@@ -739,8 +755,8 @@
             "short_name": "MND Track",
             "start_url": ".",
             "display": "standalone",
-            "background_color": "#ffffff",
-"theme_color": "#ffffff",
+            "background_color": "#050508",
+            "theme_color": "#050508",
             "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
@@ -751,15 +767,13 @@
 
         let deferredPrompt;
         
-        // Listen for the native install prompt
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Prevent Chrome 67+ from automatically showing the prompt
+            e.preventDefault(); 
             deferredPrompt = e;
             
             if (!window.matchMedia('(display-mode: standalone)').matches) {
                 document.getElementById('install-banner').classList.add('show');
                 
-                // Native Notification Feature: Push a reminder after 5 seconds if not installed
                 setTimeout(() => {
                    if(document.getElementById('install-banner').classList.contains('show')) {
                        showPushNotification("App Available", "Install the MND Tracking App for a seamless fullscreen experience.");
@@ -768,32 +782,23 @@
             }
         });
 
-        // The actual trigger to install the app
         async function installApp() {
             if (deferredPrompt) {
-                // Show the native install prompt
                 deferredPrompt.prompt();
-                
-                // Wait for the user to respond
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
                     showPushNotification("Installing...", "MND Tracking is being added to your device.");
                 }
-                
-                // We've used the prompt, clear it
                 deferredPrompt = null;
                 closeInstallBanner();
             } else {
-                // Fallback for browsers that don't support the native prompt
                 window.open('https://maa-nirmala-dj.github.io/-tent-house./', '_blank');
             }
         }
         
-        // Listen for successful installation completion
         window.addEventListener('appinstalled', () => {
             deferredPrompt = null;
             closeInstallBanner();
-            // Fire off a final premium success push notification
             showPushNotification("Installation Complete", "MND Tracking is now natively installed on your device.");
         });
         
@@ -849,27 +854,25 @@
             closeDispatchModal();
         }
 
-        // --- SAFE STRING ESCAPING (CRITICAL FIX FOR CRASHES) ---
         function escapeHTML(str) {
             if (!str) return "";
             return String(str).replace(/[&<>'"]/g, 
                 tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
+                    '&': '&',
+                    '<': '<',
+                    '>': '>',
                     "'": '&#39;',
                     '"': '&quot;'
                 }[tag] || tag)
             );
         }
 
-        // --- Global Click Listener for Menus ---
         function closeAllMenus() {
             document.querySelectorAll('.attachment-drawer').forEach(d => d.classList.remove('show'));
             document.querySelectorAll('.sticker-drawer').forEach(d => d.classList.remove('show'));
         }
 
-        // --- MODERN PILL INPUT LOGIC (From Screenshots) ---
+        // --- MODERN PILL INPUT LOGIC ---
         function handleInputTyping(role) {
             const input = document.getElementById(role + '-chat-input');
             const rightIcons = document.getElementById(role + '-right-icons');
@@ -901,7 +904,7 @@
             drawer.classList.toggle('show');
         }
 
-        // --- MISSING CHAT FUNCTIONS ---
+        // --- CHAT FUNCTIONS ---
         function copyChatText(text, e) {
             if(e) e.stopPropagation();
             const rawText = text.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
@@ -986,7 +989,7 @@
 
             db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).push(msgData).then(() => {
                 input.value = '';
-                handleInputTyping('admin'); // Reset UI
+                handleInputTyping('admin');
                 cancelReply('admin');
             }).catch(e => showToast("Send failed", "error"));
         }
@@ -1015,12 +1018,12 @@
 
             db.ref(`trackings/${currentClientPhone}/client_messages`).push(msgData).then(() => {
                 input.value = '';
-                handleInputTyping('client'); // Reset UI
+                handleInputTyping('client');
                 cancelReply('client');
             }).catch(e => showToast("Send failed", "error"));
         }
 
-        // --- FULLY WORKING MEDIA & ATTACHMENT FUNCTIONS ---
+        // --- MEDIA & ATTACHMENT FUNCTIONS ---
         let activeUploadRole = null;
 
         function triggerFileInput(inputId, role) {
@@ -1093,7 +1096,29 @@
             sendMediaMessage(role, 'sticker', src);
         }
 
-        // --- FULLY WORKING VOICE RECORDER ---
+        // --- FIXED: CLIENT EVENT LOCATION SHARE ---
+        function clientShareLocation(e) {
+            if(e) e.stopPropagation();
+            if(!currentClientPhone) return;
+            if(!navigator.geolocation) { showToast("GPS not supported.", "error"); return; }
+            
+            showToast("Acquiring Event Location...");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                db.ref(`trackings/${currentClientPhone}/client_location`).set({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    timestamp: Date.now()
+                }).then(() => {
+                    showToast("Event Location Shared with HQ!");
+                }).catch(() => {
+                    showToast("Failed to share location.", "error");
+                });
+            }, (err) => { 
+                showToast("Failed to get location. Ensure GPS is enabled.", "error"); 
+            }, { enableHighAccuracy: true });
+        }
+
+        // --- VOICE RECORDER ---
         let mediaRecorder;
         let audioChunks = [];
         let recordInterval;
@@ -1156,7 +1181,7 @@
             document.getElementById(role + '-default-pill').style.display = 'flex';
         }
 
-        // --- FULL WEBRTC LIVE CALLING IMPLEMENTATION ---
+        // --- FULL WEBRTC LIVE CALLING & SCREEN SHARE ---
         const RTC = {
             pc: null,
             localStream: null,
@@ -1172,17 +1197,18 @@
             ]
         };
 
-        // We explicitly track listeners so we don't accidentally remove global ones
         let activeCallValueListener = null;
         let iceCallerListener = null;
         let iceCalleeListener = null;
         let globalCallListenerRef = null;
         let globalCallListenerCb = null;
 
-        // Synthesize dialing/incoming sounds dynamically via Web Audio API (extremely premium)
+        // Sounds
         let ringbackInterval = null;
         let ringerInterval = null;
         let audioCtx = null;
+        
+        let currentFacingMode = 'user'; // For Camera Flip Feature
 
         function playRingbackTone() {
             if(audioCtx) return;
@@ -1194,35 +1220,23 @@
                     const osc2 = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
                     
-                    osc1.type = 'sine';
-                    osc2.type = 'sine';
+                    osc1.type = 'sine'; osc2.type = 'sine';
                     osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
                     osc2.frequency.setValueAtTime(480, audioCtx.currentTime);
                     
                     gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.8);
                     
-                    osc1.connect(gain);
-                    osc2.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    
-                    osc1.start();
-                    osc2.start();
-                    osc1.stop(audioCtx.currentTime + 1.8);
-                    osc2.stop(audioCtx.currentTime + 1.8);
+                    osc1.connect(gain); osc2.connect(gain); gain.connect(audioCtx.destination);
+                    osc1.start(); osc2.start();
+                    osc1.stop(audioCtx.currentTime + 1.8); osc2.stop(audioCtx.currentTime + 1.8);
                 }, 3000);
             } catch(e) {}
         }
 
         function stopRingbackTone() {
-            if(ringbackInterval) {
-                clearInterval(ringbackInterval);
-                ringbackInterval = null;
-            }
-            if(audioCtx) {
-                audioCtx.close();
-                audioCtx = null;
-            }
+            if(ringbackInterval) { clearInterval(ringbackInterval); ringbackInterval = null; }
+            if(audioCtx) { audioCtx.close(); audioCtx = null; }
         }
 
         function playRingtone() {
@@ -1231,8 +1245,7 @@
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 ringerInterval = setInterval(() => {
                     if(!audioCtx) return;
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
+                    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(550, audioCtx.currentTime);
                     osc.frequency.linearRampToValueAtTime(650, audioCtx.currentTime + 0.1);
@@ -1243,23 +1256,15 @@
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
                     
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 1.5);
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    osc.start(); osc.stop(audioCtx.currentTime + 1.5);
                 }, 2000);
             } catch(e) {}
         }
 
         function stopRingtone() {
-            if(ringerInterval) {
-                clearInterval(ringerInterval);
-                ringerInterval = null;
-            }
-            if(audioCtx) {
-                audioCtx.close();
-                audioCtx = null;
-            }
+            if(ringerInterval) { clearInterval(ringerInterval); ringerInterval = null; }
+            if(audioCtx) { audioCtx.close(); audioCtx = null; }
         }
 
         async function initCall(type, myRole) {
@@ -1285,7 +1290,23 @@
             else document.getElementById('local-video').style.display = 'block';
 
             try {
-                RTC.localStream = await navigator.mediaDevices.getUserMedia({ video: type === 'video', audio: true });
+                // Determine media type (Video, Audio, or Screen Share)
+                if (type === 'screen') {
+                    try {
+                        RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                    } catch (e) {
+                        showToast("Screen sharing was denied or is unsupported.", "error");
+                        endCallLocal();
+                        return;
+                    }
+                } else {
+                    currentFacingMode = 'user';
+                    RTC.localStream = await navigator.mediaDevices.getUserMedia({ 
+                        video: type === 'video' ? { facingMode: currentFacingMode } : false, 
+                        audio: true 
+                    });
+                }
+
                 document.getElementById('local-video').srcObject = RTC.localStream;
                 
                 RTC.pc = new RTCPeerConnection(servers);
@@ -1294,6 +1315,14 @@
 
                 RTC.localStream.getTracks().forEach(track => RTC.pc.addTrack(track, RTC.localStream));
                 
+                // If sharing screen, handle the user clicking "Stop sharing" on the browser bar
+                if (type === 'screen') {
+                    const screenTrack = RTC.localStream.getVideoTracks()[0];
+                    if (screenTrack) {
+                        screenTrack.onended = () => { endCall(); };
+                    }
+                }
+
                 RTC.pc.ontrack = event => {
                     stopRingbackTone();
                     document.getElementById('active-call-status').innerText = 'Connected';
@@ -1302,7 +1331,6 @@
                     });
                 };
 
-                // Clear previous call states completely
                 await RTC.callRef.remove();
                 
                 RTC.callRef.set({
@@ -1311,7 +1339,7 @@
                     status: 'ringing'
                 });
 
-                playRingbackTone(); // Play telephone ringing tone on speaker
+                playRingbackTone();
 
                 RTC.pc.onicecandidate = event => {
                     if(event.candidate) {
@@ -1323,11 +1351,10 @@
                 await RTC.pc.setLocalDescription(offer);
                 RTC.callRef.update({ offer: { type: offer.type, sdp: offer.sdp } });
 
-                // Set up safely scoped active listener
                 activeCallValueListener = snap => {
                     const data = snap.val();
                     if(!data) {
-                        endCallLocal(); // Call hung up or rejected
+                        endCallLocal();
                         return;
                     }
                     if(data.status === 'answered' && data.answer && !RTC.pc.currentRemoteDescription) {
@@ -1342,7 +1369,6 @@
                 };
                 RTC.callRef.on('value', activeCallValueListener);
 
-                // Listen for Callee ICE safely
                 iceCalleeListener = snap => {
                     if(snap.val() && RTC.pc) RTC.pc.addIceCandidate(new RTCIceCandidate(snap.val()));
                 };
@@ -1408,7 +1434,12 @@
             else document.getElementById('local-video').style.display = 'block';
 
             try {
-                RTC.localStream = await navigator.mediaDevices.getUserMedia({ video: data.type === 'video', audio: true });
+                // If caller is sharing screen, receiver responds with video webcam
+                currentFacingMode = 'user';
+                RTC.localStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: (data.type === 'video' || data.type === 'screen') ? { facingMode: currentFacingMode } : false, 
+                    audio: true 
+                });
                 document.getElementById('local-video').srcObject = RTC.localStream;
                 
                 RTC.pc = new RTCPeerConnection(servers);
@@ -1439,7 +1470,6 @@
                     status: 'answered'
                 });
 
-                // Listen for Caller ICE safely
                 iceCallerListener = snap => {
                     if(snap.val() && RTC.pc) RTC.pc.addIceCandidate(new RTCIceCandidate(snap.val()));
                 };
@@ -1489,21 +1519,11 @@
             document.getElementById('remote-video').srcObject = null;
             document.getElementById('active-call-status').innerText = '';
 
-            // Clean up ONLY the active call listeners, preserving the global incoming listener!
             if (RTC.targetPhone) {
                 const callRef = db.ref(`trackings/${RTC.targetPhone}/call`);
-                if (activeCallValueListener) {
-                    callRef.off('value', activeCallValueListener);
-                    activeCallValueListener = null;
-                }
-                if (iceCallerListener) {
-                    callRef.child('iceCandidates/caller').off('child_added', iceCallerListener);
-                    iceCallerListener = null;
-                }
-                if (iceCalleeListener) {
-                    callRef.child('iceCandidates/callee').off('child_added', iceCalleeListener);
-                    iceCalleeListener = null;
-                }
+                if (activeCallValueListener) { callRef.off('value', activeCallValueListener); activeCallValueListener = null; }
+                if (iceCallerListener) { callRef.child('iceCandidates/caller').off('child_added', iceCallerListener); iceCallerListener = null; }
+                if (iceCalleeListener) { callRef.child('iceCandidates/callee').off('child_added', iceCalleeListener); iceCalleeListener = null; }
             }
             
             RTC.callRef = null;
@@ -1532,8 +1552,46 @@
             }
         }
 
+        // --- NEW FEATURE: FLIP CAMERA ---
+        async function flipCamera() {
+            if (!RTC.localStream || !RTC.pc) return;
+            
+            const videoTrack = RTC.localStream.getVideoTracks()[0];
+            if (!videoTrack) return;
+            
+            // Do not attempt to flip if it's a screen share
+            if (videoTrack.label && videoTrack.label.toLowerCase().includes('screen')) {
+                showToast("Cannot flip camera during screen sharing.", "error");
+                return;
+            }
 
-        // --- GENERIC CLOUD MESSAGE SENDER WITH "SENT" STATUS ---
+            currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+            
+            try {
+                const newStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: currentFacingMode },
+                    audio: true
+                });
+                
+                const newVideoTrack = newStream.getVideoTracks()[0];
+                const sender = RTC.pc.getSenders().find(s => s.track && s.track.kind === 'video');
+                
+                if (sender) {
+                    sender.replaceTrack(newVideoTrack);
+                }
+                
+                videoTrack.stop();
+                RTC.localStream.removeTrack(videoTrack);
+                RTC.localStream.addTrack(newVideoTrack);
+                document.getElementById('local-video').srcObject = RTC.localStream;
+                
+            } catch(e) {
+                showToast("Camera flip not supported by device.", "error");
+            }
+        }
+
+
+        // --- GENERIC CLOUD MESSAGE SENDER ---
         function sendMediaMessage(role, type, mediaUrl, extraData = {}) {
             const targetPhone = role === 'admin' ? currentAdminTargetPhone : currentClientPhone;
             if(!targetPhone) return;
@@ -1620,47 +1678,29 @@
         }
 
         // --- SWIPE & TOUCH LOGIC FOR BUBBLES ---
-        let touchStartX = 0;
-        let touchStartY = 0;
-        let touchCurrentX = 0;
-        let touchCurrentY = 0;
-        let swipeElement = null;
-        let pressTimer = null;
-        let isSwiping = false;
+        let touchStartX = 0; let touchStartY = 0; let touchCurrentX = 0; let touchCurrentY = 0;
+        let swipeElement = null; let pressTimer = null; let isSwiping = false;
 
         function handleTouchStart(e, el, role) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            swipeElement = el;
-            isSwiping = false;
-            
+            touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
+            swipeElement = el; isSwiping = false;
             if(pressTimer) clearTimeout(pressTimer);
-            
-            pressTimer = setTimeout(() => {
-                if(!isSwiping) openMessageOptions(el, role);
-            }, 500); 
+            pressTimer = setTimeout(() => { if(!isSwiping) openMessageOptions(el, role); }, 500); 
         }
 
         function handleTouchMove(e) {
             if(!swipeElement) return;
-            touchCurrentX = e.touches[0].clientX;
-            touchCurrentY = e.touches[0].clientY;
-            
-            const diffX = touchCurrentX - touchStartX;
-            const diffY = touchCurrentY - touchStartY;
-            
+            touchCurrentX = e.touches[0].clientX; touchCurrentY = e.touches[0].clientY;
+            const diffX = touchCurrentX - touchStartX; const diffY = touchCurrentY - touchStartY;
             if (!isSwiping && Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
-                isSwiping = true;
-                clearTimeout(pressTimer); 
+                isSwiping = true; clearTimeout(pressTimer); 
             }
-
             if (isSwiping) {
                 if (e.cancelable) e.preventDefault();
                 if (diffX > 0) {
                     const translateVal = Math.min(diffX, 70);
                     swipeElement.style.transform = 'translateX(' + translateVal + 'px)';
                     swipeElement.style.transition = 'none';
-                    
                     const icon = swipeElement.previousElementSibling;
                     if(icon && icon.classList.contains('reply-swipe-icon')) {
                         icon.style.opacity = Math.min(translateVal / 50, 1);
@@ -1673,7 +1713,6 @@
         function handleTouchEnd(e, el, role) {
             clearTimeout(pressTimer);
             if(!swipeElement) return;
-            
             const diffX = touchCurrentX - touchStartX;
             const icon = swipeElement.previousElementSibling;
             
@@ -1681,31 +1720,21 @@
             swipeElement.style.transform = 'translateX(0px)';
             
             if(icon && icon.classList.contains('reply-swipe-icon')) {
-                icon.style.transition = 'all 0.3s ease';
-                icon.style.opacity = 0;
-                icon.style.transform = 'scale(0.5)';
+                icon.style.transition = 'all 0.3s ease'; icon.style.opacity = 0; icon.style.transform = 'scale(0.5)';
             }
-
             if (isSwiping && diffX > 50) {
-                const key = el.getAttribute('data-key');
-                const m = window.chatMessages[key];
-                if(m) {
-                    initiateReply(key, m.text || (m.type ? '[' + m.type + ']' : ''), m.sender, role, null);
-                }
+                const key = el.getAttribute('data-key'); const m = window.chatMessages[key];
+                if(m) { initiateReply(key, m.text || (m.type ? '[' + m.type + ']' : ''), m.sender, role, null); }
             }
-            
-            swipeElement = null;
-            isSwiping = false;
+            swipeElement = null; isSwiping = false;
         }
 
-        function handleMouseDown(e, el, role) {
-            pressTimer = setTimeout(() => openMessageOptions(el, role), 600);
-        }
+        function handleMouseDown(e, el, role) { pressTimer = setTimeout(() => openMessageOptions(el, role), 600); }
         function handleMouseUp(e) { clearTimeout(pressTimer); }
         function handleMouseLeave(e) { clearTimeout(pressTimer); }
 
 
-        // --- 1. PREMIUM AUDIO & PUSH NOTIFICATIONS ---
+        // --- PUSH NOTIFICATIONS SYSTEM ---
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then(function(registration) {
                 console.log('SW Registered');
@@ -1722,8 +1751,7 @@
             try {
                 const ctx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = ctx.createOscillator(); const gain = ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, ctx.currentTime); 
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, ctx.currentTime); 
                 osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.5); 
                 gain.gain.setValueAtTime(0.4, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
@@ -1734,7 +1762,6 @@
 
         function showPushNotification(title, body) {
             playPremiumChime();
-            
             if ("Notification" in window && Notification.permission === "granted" && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(function(registration) {
                     registration.showNotification(title, {
@@ -1747,19 +1774,11 @@
 
             let container = document.getElementById('toast-container');
             if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
+                container = document.createElement('div'); container.id = 'toast-container';
                 document.body.appendChild(container);
             }
-            const push = document.createElement('div');
-            push.className = 'native-push';
-            push.innerHTML = `
-                <div class="native-push-icon"><i class="fas fa-bell"></i></div>
-                <div class="native-push-content">
-                    <div class="native-push-title">${escapeHTML(title)} <span>Just Now</span></div>
-                    <p class="native-push-body">${escapeHTML(body)}</p>
-                </div>
-            `;
+            const push = document.createElement('div'); push.className = 'native-push';
+            push.innerHTML = `<div class="native-push-icon"><i class="fas fa-bell"></i></div><div class="native-push-content"><div class="native-push-title">${escapeHTML(title)} <span>Just Now</span></div><p class="native-push-body">${escapeHTML(body)}</p></div>`;
             container.prepend(push); 
             setTimeout(() => { push.remove(); }, 6500);
         }
@@ -1767,19 +1786,16 @@
         function showToast(message, type = 'success') {
             let container = document.getElementById('toast-container');
             if (!container) {
-                container = document.createElement('div');
-                container.id = 'toast-container';
-                document.body.appendChild(container);
+                container = document.createElement('div'); container.id = 'toast-container'; document.body.appendChild(container);
             }
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
+            const toast = document.createElement('div'); toast.className = `toast ${type}`;
             const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
             toast.innerHTML = `<i class="fas ${icon}"></i> <span>${escapeHTML(message)}</span>`;
             container.appendChild(toast);
             setTimeout(() => { toast.remove(); }, 4000);
         }
 
-        // --- 2. FIREBASE CONFIGURATION ---
+        // --- FIREBASE CONFIGURATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyCZP-zuJNDW9S4sD_d4R_-nrTMjf0HD4MM",
             authDomain: "mnd-tracking.firebaseapp.com",
@@ -1793,29 +1809,19 @@
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        // --- 3. SYSTEM STATE & CONFIG ---
+        // --- SYSTEM STATE & CONFIG ---
         const ADMIN_NUMBERS = ["9771617808", "9153635378", "7294969938", "+918544341240", "8544341240"];
         const MASTER_PIN = "121120";
         
-        let geoWatchId = null; 
-        let activeClientData = null; 
-        let pingCount = 0;
-        
-        let currentClientPhone = ""; 
-        let currentClientName = "Client";
-        let currentAdminTargetPhone = ""; 
-        let lastKnownLat = 0;
-        let lastKnownLng = 0;
+        let geoWatchId = null; let activeClientData = null; let pingCount = 0;
+        let currentClientPhone = ""; let currentClientName = "Client";
+        let currentAdminTargetPhone = ""; let lastKnownLat = 0; let lastKnownLng = 0;
 
-        // Memory for Push Notifications
-        let processedUpdateKeys = new Set();
-        let processedChatKeys = new Set();
-        let isInitialLoad = true;
-        let isChatInitialLoad = true;
-        let adminReplyContext = null;
-        let clientReplyContext = null;
+        let processedUpdateKeys = new Set(); let processedChatKeys = new Set();
+        let isInitialLoad = true; let isChatInitialLoad = true;
+        let adminReplyContext = null; let clientReplyContext = null;
 
-        // --- 4. VIEW ROUTER ---
+        // --- VIEW ROUTER ---
         function switchView(viewId) {
             document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active-view'));
             document.getElementById(viewId).classList.add('active-view');
@@ -1823,7 +1829,7 @@
             window.scrollTo(0,0);
         }
 
-        // --- 5. THE GATEKEEPER LOGIC ---
+        // --- THE GATEKEEPER LOGIC ---
         function processLogin(e) {
             if(e) e.stopPropagation();
             requestNotificationPermission();
@@ -1837,6 +1843,10 @@
 
             // Admin Logic
             if(ADMIN_NUMBERS.includes(phone) && pin === MASTER_PIN) {
+                // Save Admin Credentials locally
+                localStorage.setItem('mnd_auth_phone', phone);
+                localStorage.setItem('mnd_auth_pin', pin);
+
                 document.getElementById('login-phone').value = ''; document.getElementById('login-pin').value = '';
                 switchView('view-admin');
                 startAdminHistoryListener(); 
@@ -1855,6 +1865,10 @@
                 if (snapshot.exists()) {
                     const clientData = snapshot.val();
                     if(clientData.pin === pin || !clientData.pin) {
+                        // Save Client Credentials locally
+                        localStorage.setItem('mnd_auth_phone', phone);
+                        localStorage.setItem('mnd_auth_pin', pin);
+
                         document.getElementById('login-phone').value = ''; document.getElementById('login-pin').value = '';
                         document.getElementById('client-dash-name').innerText = escapeHTML(clientData.name) || "Client";
                         document.getElementById('client-dash-event').innerText = escapeHTML(clientData.event) || "Event Logistics";
@@ -1871,7 +1885,7 @@
                         presenceRef.onDisconnect().set({ status: 'offline', lastSeen: firebase.database.ServerValue.TIMESTAMP });
 
                         startClientWatchListeners(); 
-                        listenForCalls('client'); // Listen for WebRTC Calls
+                        listenForCalls('client'); 
                         switchView('view-client');
                         showToast(`Welcome, ${currentClientName}`);
                     } else {
@@ -1886,7 +1900,7 @@
             });
         }
 
-        // --- 6. ADMIN: PROVISION & UPDATE PIN ---
+        // --- ADMIN: PROVISION & UPDATE PIN ---
         function adminGeneratePin(e) {
             if(e) e.stopPropagation();
             const name = document.getElementById('admin-c-name').value.trim();
@@ -1913,32 +1927,26 @@
                 document.getElementById('admin-c-name').value = ''; document.getElementById('admin-c-phone').value = '';
                 document.getElementById('admin-c-event').value = ''; document.getElementById('admin-c-custom-pin').value = '';
 
-                btn.innerHTML = '<i class="fas fa-microchip"></i> AUTHORIZE & SAVE TO CLOUD'; btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-microchip"></i> AUTHORIZE & SAVE'; btn.disabled = false;
                 showToast("Client Provisioned/Updated Successfully");
             }).catch((error) => {
                 showToast("Database Permission Denied. Check Rules.", "error");
-                btn.innerHTML = '<i class="fas fa-microchip"></i> AUTHORIZE & SAVE TO CLOUD'; btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-microchip"></i> AUTHORIZE & SAVE'; btn.disabled = false;
             });
         }
 
-        // --- 7. ADMIN: SEQUENTIAL HISTORY LIST ---
+        // --- ADMIN: SEQUENTIAL HISTORY LIST ---
         function startAdminHistoryListener() {
             const listArea = document.getElementById('admin-active-list');
             db.ref('trackings').orderByChild('timestamp').on('value', (snapshot) => {
                 if(snapshot.exists()) {
-                    let html = '';
-                    const records = [];
-                    snapshot.forEach(child => {
-                        let data = child.val();
-                        if(data.name && data.phone) { records.push(data); }
-                    });
-                    
+                    let html = ''; const records = [];
+                    snapshot.forEach(child => { let data = child.val(); if(data.name && data.phone) { records.push(data); } });
                     records.reverse().forEach(data => {
                         const safeName = escapeHTML(data.name);
                         const safeEvent = escapeHTML(data.event || 'Logistics Event');
                         const jsSafeName = data.name.replace(/'/g, "\\'");
                         const jsSafeEvent = (data.event || 'Logistics Event').replace(/'/g, "\\'");
-                        
                         html += `
                             <div class="client-list-item" onclick="openAdminSession('${data.phone}', '${jsSafeName}', '${jsSafeEvent}')">
                                 <div style="width: 60%; overflow: hidden;">
@@ -1968,11 +1976,7 @@
 
         function openAdminSession(phone, name, eventName) {
             currentAdminTargetPhone = phone;
-            
-            // Get client details for dispatch
-            db.ref('trackings/' + phone).once('value').then(snap => {
-                if(snap.exists()) activeClientData = snap.val();
-            });
+            db.ref('trackings/' + phone).once('value').then(snap => { if(snap.exists()) activeClientData = snap.val(); });
 
             document.getElementById('session-c-name').innerText = escapeHTML(name);
             document.getElementById('session-c-event').innerText = escapeHTML(eventName) || "Event Logistics";
@@ -1982,22 +1986,15 @@
             switchView('view-admin-session');
             showToast(`Target Locked: ${name}`, 'success');
 
-            processedChatKeys.clear();
-            isChatInitialLoad = true;
-            cancelReply('admin');
-
-            // WebRTC Caller Listener setup
+            processedChatKeys.clear(); isChatInitialLoad = true; cancelReply('admin');
             listenForCalls('admin');
 
-            // LIVE PRESENCE: Admin Online
             const presenceRef = db.ref(`trackings/${phone}/admin_presence`);
             presenceRef.set({ status: 'online', lastSeen: Date.now() });
             presenceRef.onDisconnect().set({ status: 'offline', lastSeen: firebase.database.ServerValue.TIMESTAMP });
 
-            // Watch Client Presence
             db.ref(`trackings/${phone}/client_presence`).on('value', snap => {
-                const data = snap.val();
-                const statusEl = document.getElementById('admin-chat-status');
+                const data = snap.val(); const statusEl = document.getElementById('admin-chat-status');
                 if(!data) { statusEl.innerText = "Offline"; statusEl.style.color = "#888"; return; }
                 if(data.status === 'online') {
                     statusEl.innerText = "Online"; statusEl.style.color = "var(--neon-green)";
@@ -2008,24 +2005,20 @@
                 }
             });
 
+            // FIXED: Using valid Map links
             db.ref(`trackings/${currentAdminTargetPhone}/client_location`).on('value', (snap) => {
                 const card = document.getElementById('admin-client-loc-card');
                 if(snap.exists()) {
-                    card.style.display = 'block';
-                    const loc = snap.val();
-                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/?q=${loc.lat},${loc.lng}`;
-                } else {
-                    card.style.display = 'none';
-                }
+                    card.style.display = 'block'; const loc = snap.val();
+                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/maps?q=${loc.lat},${loc.lng}`;
+                } else { card.style.display = 'none'; }
             });
 
             db.ref(`trackings/${currentAdminTargetPhone}/updates`).orderByChild('timestamp').on('value', (snap) => {
                 const area = document.getElementById('admin-manage-updates-area');
                 if(snap.exists()) {
-                    let html = '';
-                    const updates = [];
+                    let html = ''; const updates = [];
                     snap.forEach(child => updates.push({ key: child.key, ...child.val() }));
-                    
                     updates.reverse().forEach(u => {
                         html += `
                             <div class="timeline-item" style="padding-bottom:10px; margin-bottom:10px;">
@@ -2043,39 +2036,22 @@
                 }
             });
 
-            // 3. 💬 ADVANCED TWO-WAY CHAT LISTENER (ADMIN VIEW)
             db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
                 const area = document.getElementById('admin-chat-area');
                 if(snap.exists()) {
-                    let html = '';
-                    let updatesToRead = {};
-                    
-                    window.chatMessages = window.chatMessages || {};
-
+                    let html = ''; let updatesToRead = {}; window.chatMessages = window.chatMessages || {};
                     snap.forEach(child => {
-                        const key = child.key;
-                        const m = child.val();
-
-                        window.chatMessages[key] = m; // Cache message to prevent quoting/crashing anomalies
-
-                        // Mark incoming messages as read
+                        const key = child.key; const m = child.val();
+                        window.chatMessages[key] = m;
                         if(m.sender === 'client' && m.status !== 'read') {
-                            updatesToRead[`${key}/status`] = 'read';
-                            updatesToRead[`${key}/readTime`] = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+                            updatesToRead[`${key}/status`] = 'read'; updatesToRead[`${key}/readTime`] = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
                         }
-                        
                         if (!isChatInitialLoad && !processedChatKeys.has(key) && m.sender === 'client') {
-                            let notifBody = m.type ? `Sent an attachment 📎` : m.text;
-                            showPushNotification(`Message from ${name}`, notifBody);
+                            let notifBody = m.type ? `Sent an attachment 📎` : m.text; showPushNotification(`Message from ${name}`, notifBody);
                         }
                         processedChatKeys.add(key);
-
-                        const isMe = m.sender === 'admin';
-                        const bubbleClass = isMe ? 'sent' : 'received'; 
-                        
-                        const safeTextUI = escapeHTML(m.text || '');
-                        const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
-                        
+                        const isMe = m.sender === 'admin'; const bubbleClass = isMe ? 'sent' : 'received'; 
+                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         let replyHtml = '';
                         if(m.replyToText) {
                             const senderName = m.replyToSender === 'admin' ? 'HQ Dispatch' : escapeHTML(name);
@@ -2093,7 +2069,7 @@
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://maps.google.com/maps?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
@@ -2104,7 +2080,7 @@
                         } else if (m.type === 'sticker') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="width: 120px; height: 120px; background: transparent; display:block;">`;
                         } else {
-                            messageContentHtml = `<div>${safeTextUI}</div>`; // Standard Text
+                            messageContentHtml = `<div>${safeTextUI}</div>`;
                         }
 
                         let statusHtml = '';
@@ -2131,13 +2107,8 @@
                         `;
                     });
                     
-                    if(Object.keys(updatesToRead).length > 0) {
-                        db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).update(updatesToRead);
-                    }
-
-                    isChatInitialLoad = false;
-                    area.innerHTML = html;
-                    area.scrollTop = area.scrollHeight; // Auto-scroll
+                    if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).update(updatesToRead); }
+                    isChatInitialLoad = false; area.innerHTML = html; area.scrollTop = area.scrollHeight; 
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2153,14 +2124,12 @@
                 db.ref(`trackings/${currentAdminTargetPhone}/updates`).off();
                 db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).off();
                 db.ref(`trackings/${currentAdminTargetPhone}/client_presence`).off();
-                // Set Admin offline
                 db.ref(`trackings/${currentAdminTargetPhone}/admin_presence`).set({status: 'offline', lastSeen: Date.now()});
             }
-            currentAdminTargetPhone = "";
-            switchView('view-admin');
+            currentAdminTargetPhone = ""; switchView('view-admin');
         }
 
-        // --- 8. AI REVERSE GEOCODING (Nearest Village) ---
+        // --- AI REVERSE GEOCODING ---
         async function fetchLocationName(lat, lng) {
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`);
@@ -2172,7 +2141,7 @@
             } catch(e) { return "Coordinates Locked"; }
         }
 
-        // --- 9. ADMIN: TARGETED GPS TELEMETRY ---
+        // --- ADMIN: TARGETED GPS TELEMETRY ---
         function toggleLocationBroadcast(e) {
             if(e) e.stopPropagation();
             const btn = document.getElementById('btn-broadcast');
@@ -2184,10 +2153,9 @@
             if(geoWatchId !== null) {
                 navigator.geolocation.clearWatch(geoWatchId);
                 geoWatchId = null; pingCount = 0;
-                btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST TO TARGET';
-                btn.style.background = "transparent"; btn.style.color = "var(--neon-cyan)"; btn.style.borderColor = "var(--neon-cyan)";
+                btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST';
+                btn.style.background = "rgba(0,0,0,0.5)"; btn.style.color = "var(--neon-cyan)"; btn.style.borderColor = "var(--neon-cyan)";
                 metrics.style.display = 'none'; locDisp.style.display = 'none';
-                
                 db.ref(`trackings/${currentAdminTargetPhone}/location/status`).set('offline').catch(err => console.warn(err)); 
                 showToast("Transmission Terminated", "error");
             } else {
@@ -2202,7 +2170,6 @@
                         
                         pingCount++;
                         const speedKmh = pos.coords.speed ? (pos.coords.speed * 3.6).toFixed(1) : 0;
-                        
                         document.getElementById('a-speed').innerText = speedKmh + " km/h";
                         document.getElementById('a-acc').innerText = "±" + Math.round(pos.coords.accuracy) + "m";
                         document.getElementById('a-ping').innerText = pingCount;
@@ -2211,15 +2178,12 @@
                         if(pingCount % 10 === 1) { 
                             locName = await fetchLocationName(pos.coords.latitude, pos.coords.longitude);
                             document.getElementById('a-loc-name').innerText = escapeHTML(locName);
-                        } else {
-                            locName = document.getElementById('a-loc-name').innerText;
-                        }
+                        } else { locName = document.getElementById('a-loc-name').innerText; }
 
                         db.ref(`trackings/${currentAdminTargetPhone}/location`).set({
                             status: 'online', lat: pos.coords.latitude, lng: pos.coords.longitude,
                             speed: speedKmh, heading: pos.coords.heading ? Math.round(pos.coords.heading) + "°" : "N/A",
-                            accuracy: Math.round(pos.coords.accuracy), time: new Date().toLocaleTimeString(),
-                            locationName: locName
+                            accuracy: Math.round(pos.coords.accuracy), time: new Date().toLocaleTimeString(), locationName: locName
                         });
                         
                         if(pingCount === 1) showToast("Satellite Uplink Established");
@@ -2227,23 +2191,17 @@
                     (err) => {
                         showToast("GPS Error. Ensure Location Services are ON.", "error");
                         if(geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
-                        geoWatchId = null; btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST TO TARGET';
+                        geoWatchId = null; btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST';
                     }, 
                     { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
                 );
             }
         }
 
-        // --- 10. ADMIN: TARGETED OFFICIAL UPDATE (Timeline) ---
-        function setQuickUpdate(msg, e) { 
-            if(e) e.stopPropagation();
-            document.getElementById('admin-update-text').value = msg; 
-        }
-
+        // --- ADMIN: TARGETED OFFICIAL UPDATE ---
+        function setQuickUpdate(msg, e) { if(e) e.stopPropagation(); document.getElementById('admin-update-text').value = msg; }
         function adminPushUpdate(e) {
-            if(e) e.stopPropagation();
-            if(!currentAdminTargetPhone) return;
-
+            if(e) e.stopPropagation(); if(!currentAdminTargetPhone) return;
             const text = document.getElementById('admin-update-text').value.trim();
             const btn = document.getElementById('btn-push-update');
             if(!text) { showToast("Enter an official update to transmit.", "error"); return; }
@@ -2254,29 +2212,22 @@
                 text: text, time: new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}), timestamp: Date.now()
             }).then(() => {
                 document.getElementById('admin-update-text').value = '';
-                btn.innerHTML = '<i class="fas fa-paper-plane"></i> TRANSMIT TO TIMELINE'; btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> TRANSMIT'; btn.disabled = false;
                 showToast("Official Update Transmitted");
-            }).catch(err => {
-                showToast("Permission Denied", "error"); btn.disabled = false;
-            });
+            }).catch(err => { showToast("Permission Denied", "error"); btn.disabled = false; });
         }
-
         function adminDeleteUpdate(key, e) {
-            if(e) e.stopPropagation();
-            if(!currentAdminTargetPhone) return;
+            if(e) e.stopPropagation(); if(!currentAdminTargetPhone) return;
             db.ref(`trackings/${currentAdminTargetPhone}/updates/${key}`).remove()
-            .then(() => showToast("Update Deleted"))
-            .catch(e => showToast("Failed to delete", "error"));
+            .then(() => showToast("Update Deleted")).catch(e => showToast("Failed to delete", "error"));
         }
 
-        // --- 13. CLIENT: TARGETED WATCH LISTENERS & PUSH NOTIFICATIONS ---
+        // --- CLIENT: TARGETED WATCH LISTENERS & PUSH NOTIFICATIONS ---
         function startClientWatchListeners() {
             if(!currentClientPhone) return;
 
-            // Watch Admin Presence
             db.ref(`trackings/${currentClientPhone}/admin_presence`).on('value', snap => {
-                const data = snap.val();
-                const statusEl = document.getElementById('client-chat-status');
+                const data = snap.val(); const statusEl = document.getElementById('client-chat-status');
                 if(!data) { statusEl.innerText = "Offline"; statusEl.style.color = "#888"; return; }
                 if(data.status === 'online') {
                     statusEl.innerText = "Online"; statusEl.style.color = "var(--neon-green)";
@@ -2287,6 +2238,7 @@
                 }
             });
 
+            // FIXED: MAP URL FOR IFRAME & BUTTON
             db.ref(`trackings/${currentClientPhone}/location`).on('value', (snapshot) => {
                 const badge = document.getElementById('client-conn-status');
                 if(snapshot.exists() && snapshot.val().status === 'online') {
@@ -2299,12 +2251,11 @@
                     
                     document.getElementById('map-loader-text').style.display = 'none';
                     document.getElementById('ext-map-link').style.display = 'block';
-                    document.getElementById('ext-map-link').href = `https://maps.google.com/?q=${data.lat},${data.lng}`;
+                    document.getElementById('ext-map-link').href = `https://maps.google.com/maps?q=${data.lat},${data.lng}`;
 
                     const locDisp = document.getElementById('client-location-display');
                     if(data.locationName && data.locationName !== "Resolving...") {
-                        locDisp.style.display = 'flex';
-                        document.getElementById('c-location-name').innerText = escapeHTML(data.locationName);
+                        locDisp.style.display = 'flex'; document.getElementById('c-location-name').innerText = escapeHTML(data.locationName);
                     }
 
                     if(Math.abs(data.lat - lastKnownLat) > 0.0001 || Math.abs(data.lng - lastKnownLng) > 0.0001) {
@@ -2321,31 +2272,16 @@
             db.ref(`trackings/${currentClientPhone}/updates`).orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
                 const feedArea = document.getElementById('client-updates-area');
                 if(snapshot.exists()) {
-                    let html = '';
-                    const updates = [];
-                    
+                    let html = ''; const updates = [];
                     snapshot.forEach(child => {
-                        const key = child.key;
-                        const updateData = child.val();
-                        updates.push({key, ...updateData});
-
-                        if (!isInitialLoad && !processedUpdateKeys.has(key)) {
-                            showPushNotification("Official Logistics Update", updateData.text);
-                        }
+                        const key = child.key; const updateData = child.val(); updates.push({key, ...updateData});
+                        if (!isInitialLoad && !processedUpdateKeys.has(key)) { showPushNotification("Official Logistics Update", updateData.text); }
                         processedUpdateKeys.add(key);
                     });
                     
                     isInitialLoad = false; 
-                    
                     updates.reverse().forEach((update) => {
-                        html += `
-                            <div class="timeline-item">
-                                <div class="update-content">
-                                    <div class="update-time">${escapeHTML(update.time)}</div>
-                                    <div class="update-text">${escapeHTML(update.text)}</div>
-                                </div>
-                            </div>
-                        `;
+                        html += `<div class="timeline-item"><div class="update-content"><div class="update-time">${escapeHTML(update.time)}</div><div class="update-text">${escapeHTML(update.text)}</div></div></div>`;
                     });
                     feedArea.innerHTML = html;
                 } else {
@@ -2357,34 +2293,22 @@
             db.ref(`trackings/${currentClientPhone}/client_messages`).orderByChild('timestamp').limitToLast(100).on('value', (snap) => {
                 const area = document.getElementById('client-chat-area');
                 if(snap.exists()) {
-                    let html = '';
-                    let updatesToRead = {};
-                    
-                    window.chatMessages = window.chatMessages || {};
-
+                    let html = ''; let updatesToRead = {}; window.chatMessages = window.chatMessages || {};
                     snap.forEach(child => {
-                        const key = child.key;
-                        const m = child.val();
-                        
-                        window.chatMessages[key] = m; // Cache message to prevent quoting/crashing anomalies
+                        const key = child.key; const m = child.val();
+                        window.chatMessages[key] = m; 
 
-                        // Mark incoming admin messages as read automatically
                         if(m.sender === 'admin' && m.status !== 'read') {
-                            updatesToRead[`${key}/status`] = 'read';
-                            updatesToRead[`${key}/readTime`] = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
+                            updatesToRead[`${key}/status`] = 'read'; updatesToRead[`${key}/readTime`] = new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'});
                         }
 
                         if (!isChatInitialLoad && !processedChatKeys.has(key) && m.sender === 'admin') {
-                            let notifBody = m.type ? `Sent an attachment 📎` : m.text;
-                            showPushNotification("New Message from HQ", notifBody);
+                            let notifBody = m.type ? `Sent an attachment 📎` : m.text; showPushNotification("New Message from HQ", notifBody);
                         }
                         processedChatKeys.add(key);
 
-                        const isMe = m.sender === 'client';
-                        const bubbleClass = isMe ? 'sent' : 'received';
-                        
-                        const safeTextUI = escapeHTML(m.text || '');
-                        const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        const isMe = m.sender === 'client'; const bubbleClass = isMe ? 'sent' : 'received';
+                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
                         
                         let replyHtml = '';
                         if(m.replyToText) {
@@ -2403,7 +2327,7 @@
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://maps.google.com/maps?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
@@ -2414,7 +2338,7 @@
                         } else if (m.type === 'sticker') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="width: 120px; height: 120px; background: transparent; display:block;">`;
                         } else {
-                            messageContentHtml = `<div>${safeTextUI}</div>`; // Standard Text
+                            messageContentHtml = `<div>${safeTextUI}</div>`; 
                         }
 
                         let statusHtml = '';
@@ -2441,13 +2365,8 @@
                         `;
                     });
                     
-                    if(Object.keys(updatesToRead).length > 0) {
-                        db.ref(`trackings/${currentClientPhone}/client_messages`).update(updatesToRead);
-                    }
-
-                    isChatInitialLoad = false;
-                    area.innerHTML = html;
-                    area.scrollTop = area.scrollHeight; 
+                    if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentClientPhone}/client_messages`).update(updatesToRead); }
+                    isChatInitialLoad = false; area.innerHTML = html; area.scrollTop = area.scrollHeight; 
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2455,10 +2374,14 @@
             });
         }
 
-        // --- 14. GLOBAL LOGOUT ---
+        // --- GLOBAL LOGOUT ---
         function systemLogout(e) {
             if(e) e.stopPropagation();
             if(geoWatchId !== null) toggleLocationBroadcast();
+            
+            // Clear auto-login credentials
+            localStorage.removeItem('mnd_auth_phone');
+            localStorage.removeItem('mnd_auth_pin');
             
             db.ref('trackings').off(); 
             if(currentClientPhone) {
@@ -2466,7 +2389,6 @@
                 db.ref(`trackings/${currentClientPhone}/updates`).off();
                 db.ref(`trackings/${currentClientPhone}/client_messages`).off();
                 db.ref(`trackings/${currentClientPhone}/admin_presence`).off();
-                // Set Client offline
                 db.ref(`trackings/${currentClientPhone}/client_presence`).set({status: 'offline', lastSeen: Date.now()});
                 if(RTC.callRef) RTC.callRef.off();
             }
@@ -2475,7 +2397,6 @@
                 db.ref(`trackings/${currentAdminTargetPhone}/updates`).off();
                 db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).off();
                 db.ref(`trackings/${currentAdminTargetPhone}/client_presence`).off();
-                // Set Admin offline
                 db.ref(`trackings/${currentAdminTargetPhone}/admin_presence`).set({status: 'offline', lastSeen: Date.now()});
                 if(RTC.callRef) RTC.callRef.off();
             }
