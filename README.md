@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#050508">
+    <meta name="theme-color" content="#ffffff">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,33 +21,33 @@
 
     <style>
         /* =========================================================================
-           GLOBAL RESET & VARIABLES
+           GLOBAL RESET & VARIABLES (Updated for Premium Light Theme)
            ========================================================================= */
         :root {
             --gold: #D4AF37;
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --neon-green: #00FA9A;
-            --neon-cyan: #00E5FF;
-            --bg-dark: #050508;
-            --danger: #ff3333;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --neon-green: #008a55;
+            --neon-cyan: #007380;
+            --bg-dark: #f4f6f8;
+            --danger: #e60000;
             
-            /* WhatsApp Dark Theme Colors */
-            --wa-bg: #0b141a;
-            --wa-header: #202c33;
-            --wa-sent: #005c4b;
-            --wa-received: #202c33;
-            --wa-text: #e9edef;
-            --wa-time: rgba(255,255,255,0.55);
+            /* WhatsApp Light Theme Colors */
+            --wa-bg: #efeae2;
+            --wa-header: #f0f2f5;
+            --wa-sent: #d9fdd3;
+            --wa-received: #ffffff;
+            --wa-text: #111b21;
+            --wa-time: #667781;
 
             /* Modern Input Colors */
             --brand-purple: #7C3AED;
-            --input-bg: #1f2937;
-            --icon-gray: #9ca3af;
+            --input-bg: #ffffff;
+            --icon-gray: #54656f;
         }
 
         /* Prevent Pull-To-Refresh globally using overscroll-behavior-y: none */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; outline: none; user-select: none; -webkit-user-select: none; }
-        body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
+        body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #111; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
         input, textarea { user-select: auto; -webkit-user-select: auto; } /* Allow typing */
 
         /* Cinematic Background */
@@ -55,7 +55,7 @@
             position: fixed; inset: 0; z-index: -1; opacity: 0.15;
             background-image: 
                 radial-gradient(circle at 20% 30%, var(--gold-glow) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 250, 154, 0.15) 0%, transparent 50%);
+                radial-gradient(circle at 80% 80%, rgba(0, 138, 85, 0.15) 0%, transparent 50%);
             animation: pulseBg 6s infinite alternate ease-in-out;
         }
         .grid-overlay {
@@ -63,22 +63,22 @@
             background-image: linear-gradient(var(--gold) 1px, transparent 1px), linear-gradient(90deg, var(--gold) 1px, transparent 1px);
             background-size: 40px 40px;
         }
-        @keyframes pulseBg { 0% { opacity: 0.1; transform: scale(1); } 100% { opacity: 0.25; transform: scale(1.05); } }
+        @keyframes pulseBg { 0% { opacity: 0.05; transform: scale(1); } 100% { opacity: 0.15; transform: scale(1.05); } }
 
         /* =========================================================================
            NATIVE-STYLE PUSH NOTIFICATIONS, TOASTS & INSTALL BANNER
            ========================================================================= */
         #toast-container { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; width: 100%; align-items: center; }
-        .toast { background: rgba(10,10,15,0.98); border-left: 4px solid var(--gold); color: #fff; padding: 12px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 10px; max-width: 90%; animation: dropDown 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUp 0.4s 3.5s forwards; }
+        .toast { background: rgba(255,255,255,0.98); border-left: 4px solid var(--gold); color: #111; padding: 12px 18px; border-radius: 8px; font-weight: 600; font-size: 13px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 10px; max-width: 90%; animation: dropDown 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUp 0.4s 3.5s forwards; }
         .toast.success { border-color: var(--neon-green); }
         .toast.error { border-color: var(--danger); }
         
-        .native-push { background: rgba(20, 20, 25, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 18px; padding: 12px 15px; width: 92%; max-width: 400px; display: flex; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2); animation: dropDownPush 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUpPush 0.5s 6s forwards; }
+        .native-push { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 18px; padding: 12px 15px; width: 92%; max-width: 400px; display: flex; gap: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.1), 0 0 20px rgba(212, 175, 55, 0.1); animation: dropDownPush 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards, slideUpPush 0.5s 6s forwards; }
         .native-push-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #FFD700); display: flex; align-items: center; justify-content: center; color: #000; font-size: 20px; box-shadow: 0 5px 15px rgba(212,175,55,0.4); }
         .native-push-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
-        .native-push-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; color: #fff; margin: 0 0 3px 0; text-transform: uppercase; letter-spacing: 1px; display:flex; justify-content:space-between; }
+        .native-push-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; color: #111; margin: 0 0 3px 0; text-transform: uppercase; letter-spacing: 1px; display:flex; justify-content:space-between; }
         .native-push-title span { font-size: 10px; color: var(--gold); font-weight: 500; text-transform: none; }
-        .native-push-body { font-family: 'Outfit', sans-serif; font-size: 12px; color: #ccc; margin: 0; line-height: 1.4; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .native-push-body { font-family: 'Outfit', sans-serif; font-size: 12px; color: #555; margin: 0; line-height: 1.4; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         @keyframes dropDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes slideUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-30px); } }
@@ -86,7 +86,7 @@
         @keyframes slideUpPush { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-50px) scale(0.95); } }
 
         /* PWA Install Banner UI */
-        .install-banner { position: fixed; top: 0; left: 0; right: 0; background: rgba(20,20,25,0.98); backdrop-filter: blur(15px); padding: 15px 20px; z-index: 99999999; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .install-banner { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(15px); padding: 15px 20px; z-index: 99999999; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.1); transform: translateY(-100%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .install-banner.show { transform: translateY(0); }
 
         /* =========================================================================
@@ -100,8 +100,8 @@
         /* =========================================================================
            UI COMPONENTS (Inputs, Buttons, Cards)
            ========================================================================= */
-        .app-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: clamp(22px, 6vw, 28px); font-weight: 900; letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 15px var(--gold-glow); text-align: center; }
-        .app-subtitle { color: #aaa; font-size: 12px; margin-bottom: 25px; line-height: 1.4; font-weight: 300; text-align: center; padding: 0 10px; }
+        .app-title { font-family: 'Cinzel', serif; color: var(--gold); font-size: clamp(22px, 6vw, 28px); font-weight: 900; letter-spacing: 2px; margin-bottom: 5px; text-align: center; }
+        .app-subtitle { color: #555; font-size: 12px; margin-bottom: 25px; line-height: 1.4; font-weight: 300; text-align: center; padding: 0 10px; }
 
         /* Fix Flexbox Layouts scaling out of viewport */
         div[style*="display:flex"] { max-width: 100%; box-sizing: border-box; }
@@ -109,45 +109,45 @@
 
         .input-group { width: 100%; position: relative; margin-bottom: 15px; }
         .input-group i { position: absolute; left: 16px; top: 16px; color: var(--gold); font-size: 16px; opacity: 0.8; }
-        .mn-input { width: 100%; padding: 14px 14px 14px 42px; background: rgba(0,0,0,0.6); border: 1px solid rgba(212,175,55,0.3); color: #fff; border-radius: 12px; font-size: 14px; outline: none; transition: 0.3s ease; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); box-sizing: border-box; }
-        .mn-input:focus { border-color: var(--gold); background: rgba(212,175,55,0.05); box-shadow: 0 0 15px var(--gold-glow), inset 0 2px 10px rgba(0,0,0,0.5); }
+        .mn-input { width: 100%; padding: 14px 14px 14px 42px; background: #ffffff; border: 1px solid rgba(0,0,0,0.2); color: #111; border-radius: 12px; font-size: 14px; outline: none; transition: 0.3s ease; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .mn-input:focus { border-color: var(--gold); background: #fff; box-shadow: 0 0 10px var(--gold-glow), inset 0 2px 5px rgba(0,0,0,0.05); }
         
         .pin-style { letter-spacing: 8px; font-size: 20px; font-weight: 900; text-align: center; padding-left: 15px; font-family: 'Orbitron', sans-serif; color: var(--neon-cyan); }
         .pin-style + i { display: none; }
-        .pin-style::placeholder { color: #555; letter-spacing: 3px; font-size: 14px; font-family: 'Outfit', sans-serif; font-weight: 400; }
+        .pin-style::placeholder { color: #888; letter-spacing: 3px; font-size: 14px; font-family: 'Outfit', sans-serif; font-weight: 400; }
 
         .mn-btn { width: 100%; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 8px; border: none; letter-spacing: 1px; text-transform: uppercase; flex-shrink: 0; box-sizing: border-box; }
         .mn-btn:active { transform: scale(0.96); }
         .btn-gold { background: linear-gradient(135deg, var(--gold) 0%, #FFD700 100%); color: #000; box-shadow: 0 5px 25px var(--gold-glow); }
         .btn-green { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%); color: #fff; box-shadow: 0 5px 20px rgba(37, 211, 102, 0.3); }
-        .btn-dark { background: rgba(0,0,0,0.5); border: 1px solid var(--gold); color: var(--gold); backdrop-filter: blur(5px); }
+        .btn-dark { background: #fff; border: 1px solid var(--gold); color: var(--gold); }
         .btn-danger { background: rgba(255,51,51,0.1); border: 1px solid var(--danger); color: var(--danger); margin-top: 10px; }
 
-        .dash-header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 12px; flex-shrink: 0; overflow: hidden; }
-        .status-badge { background: rgba(0, 250, 154, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 10px; border-radius: 30px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 250, 154, 0.2); white-space: nowrap; }
-        .status-badge.offline { background: rgba(255, 51, 51, 0.1); border-color: var(--danger); color: var(--danger); box-shadow: 0 0 15px rgba(255, 51, 51, 0.2); }
+        .dash-header { width: 100%; max-width: 600px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 12px; flex-shrink: 0; overflow: hidden; }
+        .status-badge { background: rgba(0, 138, 85, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 10px; border-radius: 30px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; letter-spacing: 1px; white-space: nowrap; }
+        .status-badge.offline { background: rgba(230, 0, 0, 0.1); border-color: var(--danger); color: var(--danger); }
         
-        .card { width: 100%; max-width: 600px; background: rgba(10,10,15,0.85); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 15px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-shrink: 0; box-sizing: border-box; overflow: hidden; }
+        .card { width: 100%; max-width: 600px; background: rgba(255,255,255,0.95); border: 1px solid rgba(0,0,0,0.1); padding: 15px; border-radius: 14px; margin-bottom: 15px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); flex-shrink: 0; box-sizing: border-box; overflow: hidden; }
         .card.flex-grow { flex-grow: 1; max-height: none; }
-        .card h3 { color: var(--gold); font-family: 'Cinzel'; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .card h3 { color: #333; font-family: 'Cinzel'; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed rgba(0,0,0,0.1); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
         /* =========================================================================
-           WHATSAPP-STYLE CHAT ENGINE (PERFECTED WITH SWIPE & LONG PRESS)
+           WHATSAPP-STYLE CHAT ENGINE
            ========================================================================= */
-        .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; height: 75vh; max-height: 800px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; height: 75vh; max-height: 800px; border: 1px solid rgba(0,0,0,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
         
-        .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         
         /* Subtle Chat Background Pattern */
-        .chat-area { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding: 15px 12px; display: flex; flex-direction: column; gap: 10px; background-color: var(--wa-bg); background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 20px 20px; scroll-behavior: smooth; overscroll-behavior-y: none; }
+        .chat-area { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding: 15px 12px; display: flex; flex-direction: column; gap: 10px; background-color: var(--wa-bg); background-image: radial-gradient(rgba(0,0,0,0.05) 1px, transparent 1px); background-size: 20px 20px; scroll-behavior: smooth; overscroll-behavior-y: none; }
         
         /* Swipe to Reply Wrapper */
         .bubble-wrapper { display: flex; align-items: center; width: 100%; position: relative; transition: background 0.2s; }
-        .reply-swipe-icon { position: absolute; left: 10px; font-size: 18px; color: var(--wa-text); background: rgba(0,0,0,0.5); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1; }
+        .reply-swipe-icon { position: absolute; left: 10px; font-size: 18px; color: var(--wa-text); background: rgba(255,255,255,0.8); border-radius: 50%; width: 30px; height: 30px; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.5); transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
         /* WhatsApp Chat Bubbles */
-        .chat-bubble { max-width: 85%; padding: 6px 8px 6px 12px; border-radius: 12px; position: relative; font-size: 14px; line-height: 1.4; color: var(--wa-text); display: inline-block; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.3); font-family: 'Outfit', sans-serif; font-weight: 400; z-index: 2; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .chat-bubble:active { filter: brightness(1.1); }
+        .chat-bubble { max-width: 85%; padding: 6px 8px 6px 12px; border-radius: 12px; position: relative; font-size: 14px; line-height: 1.4; color: var(--wa-text); display: inline-block; word-wrap: break-word; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-family: 'Outfit', sans-serif; font-weight: 400; z-index: 2; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .chat-bubble:active { filter: brightness(0.95); }
         
         .chat-bubble.sent { align-self: flex-end; background: var(--wa-sent); border-top-right-radius: 0; margin-left: auto; } 
         .chat-bubble.received { align-self: flex-start; background: var(--wa-received); border-top-left-radius: 0; margin-right: auto; } 
@@ -158,35 +158,35 @@
         .msg-status.read { color: #53bdeb; } /* WhatsApp Blue Tick */
         
         /* Reply Embedded inside Bubble */
-        .chat-reply-context { background: rgba(0,0,0,0.25); border-left: 4px solid var(--neon-green); padding: 5px 8px; border-radius: 6px; font-size: 12px; color: #ccc; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .chat-reply-context { background: rgba(0,0,0,0.05); border-left: 4px solid var(--neon-green); padding: 5px 8px; border-radius: 6px; font-size: 12px; color: #555; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .chat-reply-context .sender { color: var(--neon-green); font-weight: 700; margin-bottom: 2px; font-size: 11px; }
         .received .chat-reply-context { border-left-color: var(--neon-cyan); }
         .received .chat-reply-context .sender { color: var(--neon-cyan); }
         
         /* Reply Banner hovering above input */
-        .reply-banner { display: none; background: #202c33; padding: 8px 12px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 5; }
-        .reply-banner-content { flex-grow: 1; border-left: 4px solid var(--neon-green); padding-left: 10px; background: rgba(0,0,0,0.2); border-radius: 4px 8px 8px 4px; padding-top: 5px; padding-bottom: 5px; }
+        .reply-banner { display: none; background: #f0f2f5; padding: 8px 12px; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 5; }
+        .reply-banner-content { flex-grow: 1; border-left: 4px solid var(--neon-green); padding-left: 10px; background: rgba(0,0,0,0.05); border-radius: 4px 8px 8px 4px; padding-top: 5px; padding-bottom: 5px; }
         .reply-banner-content .rep-title { font-size: 11px; color: var(--neon-green); font-weight: bold; margin-bottom: 2px; }
-        .replying-to-text { color: #ccc; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
-        .cancel-reply-btn { background: transparent; border: none; color: #8696a0; font-size: 18px; cursor: pointer; padding: 5px; }
+        .replying-to-text { color: #555; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
+        .cancel-reply-btn { background: transparent; border: none; color: #54656f; font-size: 18px; cursor: pointer; padding: 5px; }
 
         /* =========================================================================
-           ADVANCED MODERN PILL INPUT & RECORDING (Based on User Screenshots)
+           ADVANCED MODERN PILL INPUT & RECORDING
            ========================================================================= */
-        .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(255,255,255,0.03); width: 100%; box-sizing: border-box; }
+        .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(0,0,0,0.05); width: 100%; box-sizing: border-box; }
         
-        .chat-modern-pill { display: flex; align-items: center; background: var(--input-bg); border-radius: 30px; padding: 5px 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 100%; transition: all 0.3s ease; box-sizing: border-box; }
+        .chat-modern-pill { display: flex; align-items: center; background: var(--input-bg); border-radius: 30px; border: 1px solid #ddd; padding: 5px 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); width: 100%; transition: all 0.3s ease; box-sizing: border-box; }
         
         .modern-left-btn { width: 34px; height: 34px; min-width: 34px; border-radius: 50%; background: var(--brand-purple); color: #fff; border: none; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; flex-shrink: 0; transition: transform 0.2s ease, box-shadow 0.2s; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4); margin-right: 8px; }
         .modern-left-btn:active { transform: scale(0.9); }
         
-        .modern-input { flex-grow: 1; background: transparent; border: none; color: #fff; font-size: 14px; padding: 5px 0; outline: none; font-family: 'Outfit', sans-serif; min-width: 0; font-weight: 400; letter-spacing: 0.2px; }
+        .modern-input { flex-grow: 1; background: transparent; border: none; color: #111; font-size: 14px; padding: 5px 0; outline: none; font-family: 'Outfit', sans-serif; min-width: 0; font-weight: 400; letter-spacing: 0.2px; }
         .modern-input::placeholder { color: var(--icon-gray); font-weight: 300; }
         
         .modern-right-icons { display: flex; align-items: center; gap: 12px; padding: 0 8px; color: var(--icon-gray); font-size: 18px; flex-shrink: 0; transition: opacity 0.3s ease, width 0.3s ease, transform 0.3s ease; overflow: hidden; }
         .modern-right-icons.hidden { opacity: 0; width: 0; padding: 0; transform: scale(0.8); pointer-events: none; }
         .modern-right-icons i { cursor: pointer; transition: 0.2s ease; }
-        .modern-right-icons i:hover { color: #fff; transform: scale(1.1); }
+        .modern-right-icons i:hover { color: #111; transform: scale(1.1); }
         .modern-right-icons i:active { transform: scale(0.9); }
 
         .modern-send-btn { width: 0; height: 34px; border-radius: 20px; background: var(--brand-purple); color: #fff; border: none; display: flex; justify-content: center; align-items: center; font-size: 14px; cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); opacity: 0; overflow: hidden; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4); }
@@ -195,25 +195,25 @@
         .modern-send-btn i { transform: translateX(-1px); }
 
         /* Voice Recording UI */
-        .recording-ui { display: none; align-items: center; justify-content: space-between; width: 100%; background: #2a3942; border-radius: 30px; padding: 5px 6px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2); }
+        .recording-ui { display: none; align-items: center; justify-content: space-between; width: 100%; background: #f0f2f5; border-radius: 30px; padding: 5px 6px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); }
         .blinking-dot { width: 10px; height: 10px; background: var(--danger); border-radius: 50%; display: inline-block; animation: blink 1s infinite; margin-right: 6px; }
         @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
         .rec-timer { color: var(--danger); font-family: 'Orbitron', monospace; font-size: 13px; font-weight: bold; flex-grow: 1; padding-left: 4px; }
 
         /* Sticker Drawer */
-        .sticker-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #1f2937; border-radius: 14px; padding: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(255,255,255,0.05); }
+        .sticker-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #ffffff; border-radius: 14px; padding: 12px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(0,0,0,0.1); }
         .sticker-drawer.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .sticker-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-height: 180px; overflow-y: auto; padding: 5px; }
-        .sticker-grid img { width: 100%; height: auto; cursor: pointer; transition: 0.2s; border-radius: 8px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+        .sticker-grid img { width: 100%; height: auto; cursor: pointer; transition: 0.2s; border-radius: 8px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
         .sticker-grid img:hover { transform: scale(1.15); }
 
         /* Attachment Menu Drawer */
-        .attachment-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #1f2937; border-radius: 14px; padding: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(255,255,255,0.05); }
+        .attachment-drawer { position: absolute; bottom: 60px; left: 10px; right: 10px; background: #ffffff; border-radius: 14px; padding: 15px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; opacity: 0; transform: translateY(20px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 10; border: 1px solid rgba(0,0,0,0.1); }
         .attachment-drawer.show { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
         .attach-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
         .attach-item:hover { transform: translateY(-3px); }
-        .attach-icon-circle { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .attach-item span { font-size: 10px; color: #d1d5db; font-family: 'Outfit'; font-weight: 500; }
+        .attach-icon-circle { width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .attach-item span { font-size: 10px; color: #555; font-family: 'Outfit'; font-weight: 500; }
         
         /* Attachment Colors */
         .bg-doc { background: #6366f1; } .bg-cam { background: #ec4899; } .bg-gal { background: #a855f7; }
@@ -223,18 +223,18 @@
            LONG PRESS MODAL OVERLAYS (NATIVE CONTEXT MENUS)
            ========================================================================= */
         .long-press-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 99999; backdrop-filter: blur(2px); justify-content: center; align-items: center; }
-        .long-press-modal { background: #233138; border-radius: 12px; width: 85%; max-width: 320px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.5); transform: scale(0.9); opacity: 0; transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .long-press-modal { background: #ffffff; border-radius: 12px; width: 85%; max-width: 320px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.2); transform: scale(0.9); opacity: 0; transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .long-press-overlay.active { display: flex; }
         .long-press-overlay.active .long-press-modal { transform: scale(1); opacity: 1; }
         
-        .msg-info-pane { padding: 12px 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .msg-info-row { display: flex; justify-content: space-between; font-size: 12px; color: #8696a0; margin-bottom: 4px; }
+        .msg-info-pane { padding: 12px 15px; background: #f0f2f5; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .msg-info-row { display: flex; justify-content: space-between; font-size: 12px; color: #54656f; margin-bottom: 4px; }
         .msg-info-row:last-child { margin-bottom: 0; }
-        .msg-info-row span.val { color: #e9edef; font-weight: 500; }
+        .msg-info-row span.val { color: #111; font-weight: 500; }
         
-        .modal-action-btn { width: 100%; padding: 12px 15px; text-align: left; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.05); color: #e9edef; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-family: 'Outfit'; }
+        .modal-action-btn { width: 100%; padding: 12px 15px; text-align: left; background: transparent; border: none; border-bottom: 1px solid rgba(0,0,0,0.05); color: #111; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; font-family: 'Outfit'; }
         .modal-action-btn:last-child { border-bottom: none; }
-        .modal-action-btn:active { background: rgba(255,255,255,0.05); }
+        .modal-action-btn:active { background: rgba(0,0,0,0.05); }
         .modal-action-btn i { font-size: 16px; width: 22px; text-align: center; }
         .modal-action-btn.delete { color: #ef4444; }
 
@@ -247,55 +247,55 @@
         #active-call-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999999999; flex-direction: column; overflow: hidden; }
         
         /* =========================================================================
-           TIMELINE, HISTORY & MAP (RESPONSIVE FIXES)
+           TIMELINE, HISTORY & MAP
            ========================================================================= */
-        .client-list-item { background: rgba(0,0,0,0.6); padding: 12px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .client-list-item:hover { background: rgba(212, 175, 55, 0.1); border-left-color: var(--gold); transform: translateY(-2px); }
-        .client-list-item h4 { margin:0 0 3px 0; font-size: 14px; color: #fff; font-family: 'Cinzel', serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .client-list-item p { margin:0; font-size: 11px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .client-list-item { background: #ffffff; padding: 12px; border-radius: 10px; border-left: 4px solid var(--neon-cyan); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .client-list-item:hover { background: #fcfcfc; border-left-color: var(--gold); transform: translateY(-2px); }
+        .client-list-item h4 { margin:0 0 3px 0; font-size: 14px; color: #111; font-family: 'Cinzel', serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .client-list-item p { margin:0; font-size: 11px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .client-list-actions { display: flex; align-items: center; gap: 8px; }
         .client-list-pin { font-family: 'Orbitron', monospace; font-size: 14px; color: var(--gold); font-weight: bold; background: rgba(212,175,55,0.1); padding: 5px 8px; border-radius: 6px; letter-spacing: 1px; }
         
         .action-icon-btn { background: transparent; border: none; color: #888; font-size: 16px; cursor: pointer; transition: 0.3s; padding: 5px; }
         .action-icon-btn:hover { color: var(--neon-cyan); transform: scale(1.1); }
-        .action-icon-btn.trash { color: rgba(255,51,51,0.7); }
+        .action-icon-btn.trash { color: rgba(230,0,0,0.7); }
         .action-icon-btn.trash:hover { color: var(--danger); transform: scale(1.2); }
 
-        .map-wrapper { width: 100%; height: 220px; border-radius: 10px; overflow: hidden; border: 2px solid #222; position: relative; background: #050505; margin-bottom: 12px; }
-        .map-iframe { width: 100%; height: 100%; border: none; filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(110%) sepia(30%); pointer-events: none; transition: 1s ease; opacity: 0; }
+        .map-wrapper { width: 100%; height: 220px; border-radius: 10px; overflow: hidden; border: 2px solid #ddd; position: relative; background: #eee; margin-bottom: 12px; }
+        .map-iframe { width: 100%; height: 100%; border: none; pointer-events: none; transition: 1s ease; opacity: 0; filter: none; }
         .map-iframe.loaded { opacity: 1; }
         .map-loader { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--gold); font-size: 11px; text-align: center; font-weight: bold; letter-spacing: 1px; z-index: 1; }
         
-        .location-display { background: rgba(0,229,255,0.05); border: 1px solid rgba(0,229,255,0.2); border-radius: 8px; padding: 10px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-        .location-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,229,255,0.15); display: flex; justify-content: center; align-items: center; color: var(--neon-cyan); font-size: 14px; flex-shrink: 0; }
-        .location-text h4 { margin: 0 0 2px 0; font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .location-text p { margin: 0; font-size: 13px; color: #fff; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .location-display { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; padding: 10px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .location-icon { width: 30px; height: 30px; border-radius: 50%; background: rgba(0,115,128,0.1); display: flex; justify-content: center; align-items: center; color: var(--neon-cyan); font-size: 14px; flex-shrink: 0; }
+        .location-text h4 { margin: 0 0 2px 0; font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .location-text p { margin: 0; font-size: 13px; color: #111; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
         .telemetrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-        .metric-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 8px; text-align: center; }
-        .metric-label { font-size: 9px; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+        .metric-box { background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; padding: 8px; text-align: center; }
+        .metric-label { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
         .metric-value { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 700; color: var(--neon-cyan); }
 
         .timeline-feed { padding-left: 15px; position: relative; flex-grow: 1; overflow-y: auto; padding-right: 5px; min-height: 180px; margin-bottom: 10px; }
-        .timeline-item { position: relative; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed rgba(255,255,255,0.05); animation: slideInLeft 0.4s ease forwards; display: flex; justify-content: space-between; align-items: flex-start; }
+        .timeline-item { position: relative; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed rgba(0,0,0,0.1); animation: slideInLeft 0.4s ease forwards; display: flex; justify-content: space-between; align-items: flex-start; }
         .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .timeline-item::before { content: ''; position: absolute; left: -21px; top: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); border: 2px solid #111; z-index: 2; }
-        .timeline-item::after { content: ''; position: absolute; left: -17px; top: 15px; width: 2px; height: 100%; background: rgba(0, 250, 154, 0.3); z-index: 1; }
+        .timeline-item::before { content: ''; position: absolute; left: -21px; top: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--neon-green); box-shadow: 0 0 10px var(--neon-green); border: 2px solid #fff; z-index: 2; }
+        .timeline-item::after { content: ''; position: absolute; left: -17px; top: 15px; width: 2px; height: 100%; background: rgba(0, 138, 85, 0.3); z-index: 1; }
         .timeline-item:last-child::after { display: none; }
         
         .update-content { width: 85%; }
         .update-time { font-size: 9px; color: var(--gold); margin-bottom: 4px; font-family: 'Orbitron', sans-serif; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
-        .update-text { font-size: 13px; color: #eee; line-height: 1.4; font-weight: 500; word-wrap: break-word; }
+        .update-text { font-size: 13px; color: #333; line-height: 1.4; font-weight: 500; word-wrap: break-word; }
 
         .quick-actions { display: flex; gap: 5px; margin-bottom: 12px; flex-wrap: wrap; }
-        .quick-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(212,175,55,0.4); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; transition: 0.3s; font-family: 'Orbitron', sans-serif; flex-grow: 1; text-align: center; }
-        .quick-btn:hover { background: rgba(212,175,55,0.2); border-color: var(--gold); color: var(--gold); }
+        .quick-btn { background: #ffffff; border: 1px solid rgba(0,0,0,0.2); color: #333; padding: 6px 8px; border-radius: 6px; font-size: 10px; cursor: pointer; transition: 0.3s; font-family: 'Orbitron', sans-serif; flex-grow: 1; text-align: center; }
+        .quick-btn:hover { background: rgba(0,0,0,0.05); border-color: var(--gold); color: var(--gold); }
         
-        .target-lock-banner { background: rgba(0, 229, 255, 0.1); border: 1px dashed var(--neon-cyan); padding: 10px 12px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; width: 100%; max-width: 600px; box-sizing: border-box; }
+        .target-lock-banner { background: rgba(0, 115, 128, 0.05); border: 1px dashed rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; width: 100%; max-width: 600px; box-sizing: border-box; }
         .target-lock-banner i { color: var(--neon-cyan); font-size: 20px; animation: targetPulse 2s infinite; }
         .target-lock-details { overflow: hidden; }
         .target-lock-details h4 { margin: 0; color: var(--neon-cyan); font-size: 12px; font-family: 'Orbitron'; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .target-lock-details p { margin: 2px 0 0 0; color: #fff; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .target-lock-details p { margin: 2px 0 0 0; color: #333; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         @keyframes targetPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.5; } }
     </style>
 </head>
@@ -307,10 +307,10 @@
 
     <div id="install-banner" class="install-banner">
         <div style="display:flex; align-items:center; gap:12px;">
-            <img src="https://i.postimg.cc/52vLtJBM/1000095487-(2).png" style="width:35px; height:35px; border-radius:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            <img src="https://i.postimg.cc/52vLtJBM/1000095487-(2).png" style="width:35px; height:35px; border-radius:8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
             <div>
                 <h4 style="margin:0; color:var(--gold); font-size:13px; font-family:'Cinzel';">MND Tracking App</h4>
-                <p style="margin:0; color:#aaa; font-size:10px;">Install for full-screen experience</p>
+                <p style="margin:0; color:#555; font-size:10px;">Install for full-screen experience</p>
             </div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
@@ -332,9 +332,9 @@
     </div>
 
     <div id="incoming-call-overlay" class="long-press-overlay">
-        <div class="long-press-modal" style="text-align:center; padding: 30px 20px; background: rgba(35, 49, 56, 0.95); border: 1px solid var(--gold);">
+        <div class="long-press-modal" style="text-align:center; padding: 30px 20px; background: #ffffff; border: 1px solid var(--gold);">
             <div class="attach-icon-circle bg-cam" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 28px; animation: targetPulse 1s infinite alternate; background: var(--brand-purple);"><i class="fas fa-video"></i></div>
-            <h3 style="color:#fff; margin-bottom: 5px; font-family:'Outfit';">Incoming Call</h3>
+            <h3 style="color:#111; margin-bottom: 5px; font-family:'Outfit';">Incoming Call</h3>
             <p id="incoming-call-name" style="color:var(--neon-cyan); font-size:14px; margin-bottom: 25px; font-weight: bold;">HQ Dispatch</p>
             <div style="display:flex; justify-content:center; gap:20px;">
                 <button class="mn-btn btn-danger" style="width:50px; height:50px; border-radius:50%; padding:0; margin:0;" onclick="declineCall()"><i class="fas fa-phone-slash"></i></button>
@@ -361,11 +361,11 @@
 
     <div id="dispatch-overlay" class="long-press-overlay" onclick="closeDispatchModal()">
         <div class="long-press-modal" style="padding: 20px; display: flex; flex-direction: column; gap: 15px;" onclick="event.stopPropagation()">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(0,0,0,0.1); padding-bottom:10px;">
                 <h3 style="margin:0; font-family:'Cinzel'; color:var(--gold); font-size:16px;">Dispatch Links</h3>
-                <div style="display:flex; gap:5px; background:rgba(0,0,0,0.5); border-radius:8px; padding:3px;">
+                <div style="display:flex; gap:5px; background:rgba(0,0,0,0.05); border-radius:8px; padding:3px;">
                     <button id="lang-btn-en" style="background:var(--gold); color:#000; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; font-size:10px; cursor:pointer; transition:0.3s;" onclick="toggleDispatchLang('en')">EN</button>
-                    <button id="lang-btn-hi" style="background:transparent; color:#fff; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; font-size:10px; opacity:0.5; cursor:pointer; transition:0.3s;" onclick="toggleDispatchLang('hi')">HI</button>
+                    <button id="lang-btn-hi" style="background:transparent; color:#111; border:none; padding:4px 8px; border-radius:6px; font-weight:bold; font-size:10px; opacity:0.5; cursor:pointer; transition:0.3s;" onclick="toggleDispatchLang('hi')">HI</button>
                 </div>
             </div>
             
@@ -382,7 +382,7 @@
     <input type="file" id="file-camera" accept="image/*" capture="environment" style="display:none;" onchange="handleFileUpload(event, 'camera')">
 
     <div id="view-gatekeeper" class="view-container active-view" style="justify-content: center;">
-        <div class="gatekeeper-box" style="background: rgba(15,15,20,0.85); position:relative; overflow:hidden; border-radius:20px; padding:30px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.9); border:2px solid var(--gold); max-width:400px; width: 100%;">
+        <div class="gatekeeper-box" style="background: rgba(255,255,255,0.95); position:relative; overflow:hidden; border-radius:20px; padding:30px 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); border:2px solid var(--gold); max-width:400px; width: 100%;">
             <h1 class="app-title"><i class="fas fa-satellite-dish"></i> MND TRACKING</h1>
             <p class="app-subtitle">Secured Cloud Logistics Portal.<br>Enter your Mobile Number and PIN below.</p>
             
@@ -404,14 +404,14 @@
         <div class="dash-header">
             <div>
                 <h2 style="color:var(--gold); font-family:'Cinzel'; margin:0; font-size:18px;">Command Center</h2>
-                <span style="font-size:10px; color:#888;">Authorized Personnel Only</span>
+                <span style="font-size:10px; color:#666;">Authorized Personnel Only</span>
             </div>
             <div class="status-badge"><i class="fas fa-link"></i> DB SYNCED</div>
         </div>
 
         <div class="card">
             <h3><i class="fas fa-key"></i> Provision / Update</h3>
-            <p style="font-size:10px; color:#aaa; margin-bottom:12px;">Entering an existing number will elegantly UPDATE their PIN without deleting history.</p>
+            <p style="font-size:10px; color:#666; margin-bottom:12px;">Entering an existing number will elegantly UPDATE their PIN without deleting history.</p>
             
             <div style="display:flex; gap:8px; margin-bottom:10px; width: 100%;">
                 <input type="text" id="admin-c-name" class="mn-input" style="padding:12px; flex:1;" placeholder="Client Name *">
@@ -425,9 +425,9 @@
             
             <button class="mn-btn btn-gold" id="btn-generate" onclick="adminGeneratePin(event)"><i class="fas fa-microchip"></i> AUTHORIZE & SAVE</button>
 
-            <div id="admin-pin-result" style="display:none; margin-top:15px; text-align:center; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; border: 1px dashed var(--neon-green);">
-                <p style="color:#aaa; font-size:10px; text-transform:uppercase; letter-spacing:1px;">Client Access Ready:</p>
-                <div style="font-family:'Orbitron', monospace; font-size:32px; color:var(--neon-green); font-weight:900; letter-spacing:6px; margin:8px 0; text-shadow: 0 0 15px rgba(0,250,154,0.4);" id="display-new-pin">000000</div>
+            <div id="admin-pin-result" style="display:none; margin-top:15px; text-align:center; background: rgba(0,0,0,0.02); padding: 15px; border-radius: 10px; border: 1px dashed var(--neon-green);">
+                <p style="color:#666; font-size:10px; text-transform:uppercase; letter-spacing:1px;">Client Access Ready:</p>
+                <div style="font-family:'Orbitron', monospace; font-size:32px; color:var(--neon-green); font-weight:900; letter-spacing:6px; margin:8px 0; text-shadow: 0 0 5px rgba(0,138,85,0.1);" id="display-new-pin">000000</div>
                 <button class="mn-btn btn-green" onclick="openDispatchModal(event)"><i class="fas fa-share-alt"></i> DISPATCH OPTIONS</button>
             </div>
         </div>
@@ -437,7 +437,7 @@
                 <h3 style="margin:0; border:none; padding:0;"><i class="fas fa-history"></i> Live Network</h3>
                 <span style="font-size:10px; background:rgba(212,175,55,0.1); padding:3px 6px; border-radius:4px; color:var(--gold);">Auto-Sync</span>
             </div>
-            <p style="font-size:10px; color:#888; margin-bottom:12px; flex-shrink:0;">Click client below to open Targeted Live Session.</p>
+            <p style="font-size:10px; color:#666; margin-bottom:12px; flex-shrink:0;">Click client below to open Targeted Live Session.</p>
             
             <div id="admin-active-list" style="flex-grow:1; overflow-y:auto; padding-right: 5px;">
                 <div style="text-align:center; color:#555; font-size:12px; padding:20px;"><i class="fas fa-circle-notch fa-spin"></i> Fetching history logs...</div>
@@ -451,7 +451,7 @@
         <div class="dash-header" style="border-color:var(--neon-cyan);">
             <div style="overflow: hidden;">
                 <h2 style="color:var(--neon-cyan); font-family:'Orbitron'; margin:0; font-size:16px;">Targeted Session</h2>
-                <span style="font-size:10px; color:#888;">Direct Encrypted Link</span>
+                <span style="font-size:10px; color:#666;">Direct Encrypted Link</span>
             </div>
             <button class="action-icon-btn" onclick="closeAdminSession(event)" style="color:var(--gold); border:1px solid var(--gold); border-radius:50%; width:30px; height:30px; background:rgba(212,175,55,0.1); flex-shrink: 0;"><i class="fas fa-times"></i></button>
         </div>
@@ -464,22 +464,22 @@
             </div>
         </div>
 
-        <div class="card" id="admin-client-loc-card" style="display:none; border-color:var(--neon-green); background:rgba(0,250,154,0.05);">
-            <h3 style="color:var(--neon-green); border-bottom-color:rgba(0,250,154,0.3);"><i class="fas fa-street-view"></i> Target Event Location</h3>
-            <p style="font-size:11px; color:#aaa; margin-bottom:12px;">The client has shared their exact event coordinates.</p>
+        <div class="card" id="admin-client-loc-card" style="display:none; border-color:var(--neon-green); background:rgba(0,138,85,0.05);">
+            <h3 style="color:var(--neon-green); border-bottom-color:rgba(0,138,85,0.3);"><i class="fas fa-street-view"></i> Target Event Location</h3>
+            <p style="font-size:11px; color:#666; margin-bottom:12px;">The client has shared their exact event coordinates.</p>
             <a id="admin-view-client-map" href="#" target="_blank" class="mn-btn btn-green" style="font-size:12px; padding:10px; text-decoration:none;"><i class="fas fa-map-marker-alt"></i> OPEN IN MAPS</a>
         </div>
 
         <div class="card">
-            <h3 style="color:var(--neon-cyan); border-bottom-color:rgba(0, 229, 255, 0.3);"><i class="fas fa-satellite"></i> Direct GPS Uplink</h3>
+            <h3 style="color:var(--neon-cyan); border-bottom-color:rgba(0, 115, 128, 0.3);"><i class="fas fa-satellite"></i> Direct GPS Uplink</h3>
             <div class="telemetrics-grid" id="admin-telemetrics" style="display:none;">
                 <div class="metric-box"><div class="metric-label">Speed</div><div class="metric-value" id="a-speed">0 km/h</div></div>
                 <div class="metric-box"><div class="metric-label">Accuracy</div><div class="metric-value" id="a-acc">0 m</div></div>
                 <div class="metric-box"><div class="metric-label">Pings</div><div class="metric-value" id="a-ping">0</div></div>
             </div>
             
-            <div id="admin-ai-location" class="location-display" style="display:none; border-color:var(--neon-cyan); background:rgba(0,229,255,0.05);">
-                <div class="location-icon" style="color:var(--neon-cyan); background:rgba(0,229,255,0.1);"><i class="fas fa-map-marked-alt"></i></div>
+            <div id="admin-ai-location" class="location-display" style="display:none; border-color:var(--neon-cyan); background:rgba(0,115,128,0.05);">
+                <div class="location-icon" style="color:var(--neon-cyan); background:rgba(0,115,128,0.1);"><i class="fas fa-map-marked-alt"></i></div>
                 <div class="location-text">
                     <h4>Current Area Detected</h4>
                     <p id="a-loc-name">Resolving coordinates...</p>
@@ -490,20 +490,20 @@
         </div>
 
         <div class="card">
-            <h3 style="color:var(--neon-cyan); border-bottom-color:rgba(0, 229, 255, 0.3);"><i class="fas fa-bullhorn"></i> Public Logistics Feed</h3>
+            <h3 style="color:var(--neon-cyan); border-bottom-color:rgba(0, 115, 128, 0.3);"><i class="fas fa-bullhorn"></i> Public Logistics Feed</h3>
             
             <div class="quick-actions">
                 <button class="quick-btn" onclick="setQuickUpdate('🚚 Fleet Dispatched. En route to venue.', event)"><i class="fas fa-truck-moving"></i> Dispatched</button>
                 <button class="quick-btn" onclick="setQuickUpdate('📍 Fleet Arrived. Commencing Unloading.', event)"><i class="fas fa-map-marker-alt"></i> Arrived</button>
                 <button class="quick-btn" onclick="setQuickUpdate('⚙️ Unloaded. Stage & Audio setup begun.', event)"><i class="fas fa-tools"></i> Setup</button>
-                <button class="quick-btn" style="border-color:rgba(255,51,51,0.5); color:#ff6b6b;" onclick="setQuickUpdate('🛑 Minor delay due to traffic. Actively moving.', event)"><i class="fas fa-traffic-light"></i> Delay</button>
+                <button class="quick-btn" style="border-color:rgba(230,0,0,0.5); color:#ff3333;" onclick="setQuickUpdate('🛑 Minor delay due to traffic. Actively moving.', event)"><i class="fas fa-traffic-light"></i> Delay</button>
             </div>
 
             <textarea id="admin-update-text" class="mn-input" rows="2" style="resize:none; padding:12px; flex-shrink:0;" placeholder="Push an official update..."></textarea>
-            <button class="mn-btn btn-gold" style="margin-top:10px; flex-shrink:0; background: linear-gradient(135deg, var(--neon-cyan) 0%, #0088cc 100%); box-shadow: 0 5px 25px rgba(0,229,255,0.3);" id="btn-push-update" onclick="adminPushUpdate(event)"><i class="fas fa-paper-plane"></i> TRANSMIT</button>
+            <button class="mn-btn btn-gold" style="margin-top:10px; flex-shrink:0; background: linear-gradient(135deg, var(--neon-cyan) 0%, #0088cc 100%); box-shadow: 0 5px 25px rgba(0,115,128,0.3);" id="btn-push-update" onclick="adminPushUpdate(event)"><i class="fas fa-paper-plane"></i> TRANSMIT</button>
             
-            <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top:12px; margin-top: 12px;">
-                <h4 style="font-size:10px; color:#aaa; margin-bottom:8px; text-transform:uppercase; flex-shrink:0;">Manage Sent Updates:</h4>
+            <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top:12px; margin-top: 12px;">
+                <h4 style="font-size:10px; color:#666; margin-bottom:8px; text-transform:uppercase; flex-shrink:0;">Manage Sent Updates:</h4>
                 <div id="admin-manage-updates-area" class="timeline-feed" style="max-height: 150px;">
                     </div>
             </div>
@@ -512,9 +512,9 @@
         <div class="chat-card">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:35px; height:35px; border-radius:50%; background:var(--neon-cyan); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-user-tie"></i></div>
+                    <div style="width:35px; height:35px; border-radius:50%; background:var(--neon-cyan); display:flex; justify-content:center; align-items:center; color:#fff; font-size:16px;"><i class="fas fa-user-tie"></i></div>
                     <div>
-                        <h3 style="margin:0; padding:0; color:#fff; font-size:14px; border:none;" id="admin-chat-header-name">Target Client</h3>
+                        <h3 style="margin:0; padding:0; color:#111; font-size:14px; border:none;" id="admin-chat-header-name">Target Client</h3>
                         <div id="admin-chat-status" style="font-size:10px; color:var(--neon-green); transition: 0.3s;">Online</div>
                     </div>
                 </div>
@@ -525,7 +525,7 @@
             </div>
             
             <div id="admin-chat-area" class="chat-area" onclick="closeAllMenus()">
-                <div style="font-size:11px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:10px;">End-to-end encrypted chat started</div>
+                <div style="font-size:11px; color:#666; text-align:center; margin: auto; background:rgba(0,0,0,0.05); padding:5px 10px; border-radius:10px;">End-to-end encrypted chat started</div>
             </div>
 
             <div id="admin-reply-banner" class="reply-banner">
@@ -595,25 +595,25 @@
         <div class="dash-header" style="max-width:100%; width:100%;">
             <div style="width:65%; overflow: hidden;">
                 <h2 id="client-dash-event" style="color:var(--gold); font-family:'Cinzel'; margin:0; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Loading Event...</h2>
-                <span style="font-size:10px; color:#888;">Auth: <span id="client-dash-name" style="color:#fff;">Loading...</span></span>
+                <span style="font-size:10px; color:#666;">Auth: <span id="client-dash-name" style="color:#111;">Loading...</span></span>
             </div>
             <div class="status-badge" id="client-conn-status"><i class="fas fa-circle fa-beat"></i> ONLINE</div>
         </div>
 
-        <div class="card" style="max-width:100%; width:100%; padding: 12px; background:rgba(0, 250, 154, 0.05); border-color:var(--neon-green); margin-bottom:12px; flex-shrink:0;">
+        <div class="card" style="max-width:100%; width:100%; padding: 12px; background:rgba(0, 138, 85, 0.05); border-color:var(--neon-green); margin-bottom:12px; flex-shrink:0;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <h4 style="color:var(--neon-green); margin:0; font-size:13px;"><i class="fas fa-street-view"></i> Event Location</h4>
-                    <p style="font-size:10px; color:#aaa; margin:0;">Send map pin to logistics.</p>
+                    <p style="font-size:10px; color:#666; margin:0;">Send map pin to logistics.</p>
                 </div>
                 <button class="mn-btn btn-green" style="width:auto; padding: 8px 12px; font-size:11px;" onclick="clientShareLocation(event)"><i class="fas fa-share-location"></i> SHARE</button>
             </div>
         </div>
 
         <div class="card" style="max-width:100%; width:100%; padding: 15px; flex-shrink:0; margin-bottom:15px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom: 12px; border-bottom: 1px dashed rgba(255,255,255,0.1); margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom: 12px; border-bottom: 1px dashed rgba(0,0,0,0.1); margin-bottom: 10px;">
                 <h3 style="margin:0; border:none; padding:0; font-size:16px;"><i class="fas fa-crosshairs"></i> Live Tracking</h3>
-                <span id="client-gps-time" style="font-size:9px; color:#888; font-family:'Orbitron';">Awaiting Signal...</span>
+                <span id="client-gps-time" style="font-size:9px; color:#666; font-family:'Orbitron';">Awaiting Signal...</span>
             </div>
             
             <div class="telemetrics-grid">
@@ -641,16 +641,16 @@
         <div class="card" style="max-width:100%; width:100%; display:flex; flex-direction:column; flex-shrink:0;">
             <h3 style="margin-bottom: 15px; flex-shrink:0;"><i class="fas fa-bullhorn"></i> Official Logistics Updates</h3>
             <div id="client-updates-area" class="timeline-feed" style="max-height: 250px;">
-                <div style="text-align:center; color:#555; font-size:12px; padding:20px; border:none; margin-left:-15px;"><i class="fas fa-circle-notch fa-spin"></i> Listening for broadcasts...</div>
+                <div style="text-align:center; color:#666; font-size:12px; padding:20px; border:none; margin-left:-15px;"><i class="fas fa-circle-notch fa-spin"></i> Listening for broadcasts...</div>
             </div>
         </div>
 
         <div class="chat-card">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="width:35px; height:35px; border-radius:50%; background:var(--gold); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-headset"></i></div>
+                    <div style="width:35px; height:35px; border-radius:50%; background:var(--gold); display:flex; justify-content:center; align-items:center; color:#fff; font-size:16px;"><i class="fas fa-headset"></i></div>
                     <div>
-                        <h3 style="margin:0; padding:0; color:#fff; font-size:14px; border:none;">HQ Dispatch Support</h3>
+                        <h3 style="margin:0; padding:0; color:#111; font-size:14px; border:none;">HQ Dispatch Support</h3>
                         <div id="client-chat-status" style="font-size:10px; color:var(--neon-green); transition: 0.3s;">Online</div>
                     </div>
                 </div>
@@ -661,7 +661,7 @@
             </div>
             
             <div id="client-chat-area" class="chat-area" onclick="closeAllMenus()">
-                <div style="font-size:11px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:5px 10px; border-radius:10px;">End-to-end encrypted chat started</div>
+                <div style="font-size:11px; color:#666; text-align:center; margin: auto; background:rgba(0,0,0,0.05); padding:5px 10px; border-radius:10px;">End-to-end encrypted chat started</div>
             </div>
 
             <div id="client-reply-banner" class="reply-banner">
@@ -731,7 +731,7 @@
 
     <script>
         // --- SAFE SVG FOR MAP PIN FALLBACK ---
-        const mapSvgStr = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23202c33'/><path d='M0,50 Q100,150 200,50 T400,50' stroke='%23005c4b' stroke-width='3' fill='none'/><path d='M0,150 Q100,50 200,150 T400,150' stroke='%23005c4b' stroke-width='3' fill='none'/><circle cx='200' cy='100' r='30' fill='rgba(0, 229, 255, 0.15)'/><circle cx='200' cy='100' r='8' fill='%2300E5FF'/><path d='M200,100 L200,120' stroke='%2300E5FF' stroke-width='4'/><text x='200' y='145' font-family='sans-serif' font-size='16' fill='%2300E5FF' text-anchor='middle' font-weight='bold'>📍 Live Location</text></svg>`;
+        const mapSvgStr = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23ffffff'/><path d='M0,50 Q100,150 200,50 T400,50' stroke='%23005c4b' stroke-width='3' fill='none'/><path d='M0,150 Q100,50 200,150 T400,150' stroke='%23005c4b' stroke-width='3' fill='none'/><circle cx='200' cy='100' r='30' fill='rgba(0, 115, 128, 0.15)'/><circle cx='200' cy='100' r='8' fill='%2300E5FF'/><path d='M200,100 L200,120' stroke='%2300E5FF' stroke-width='4'/><text x='200' y='145' font-family='sans-serif' font-size='16' fill='%2300E5FF' text-anchor='middle' font-weight='bold'>📍 Live Location</text></svg>`;
         const mapDataURI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(mapSvgStr);
 
         // --- PWA & APP INSTALL LOGIC ---
@@ -740,8 +740,8 @@
             "short_name": "MND Track",
             "start_url": ".",
             "display": "standalone",
-            "background_color": "#050508",
-            "theme_color": "#050508",
+            "background_color": "#ffffff",
+            "theme_color": "#ffffff",
             "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
@@ -855,9 +855,9 @@
             if (!str) return "";
             return String(str).replace(/[&<>'"]/g, 
                 tag => ({
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
+                    '&': '&',
+                    '<': '<',
+                    '>': '>',
                     "'": '&#39;',
                     '"': '&quot;'
                 }[tag] || tag)
@@ -1092,6 +1092,28 @@
             if(e) e.stopPropagation();
             closeAllMenus();
             sendMediaMessage(role, 'sticker', src);
+        }
+        
+        // --- EVENT LOCATION SHARE (FIXED & ADDED) ---
+        function clientShareLocation(e) {
+            if(e) e.stopPropagation();
+            if(!currentClientPhone) return;
+            if(!navigator.geolocation) { showToast("GPS not supported.", "error"); return; }
+            
+            showToast("Acquiring Event Location...");
+            navigator.geolocation.getCurrentPosition((pos) => {
+                db.ref(`trackings/${currentClientPhone}/client_location`).set({
+                    lat: pos.coords.latitude,
+                    lng: pos.coords.longitude,
+                    timestamp: Date.now()
+                }).then(() => {
+                    showToast("Event Location Shared with HQ!");
+                }).catch(() => {
+                    showToast("Failed to share location.", "error");
+                });
+            }, (err) => { 
+                showToast("Failed to get location.", "error"); 
+            }, { enableHighAccuracy: true });
         }
 
         // --- FULLY WORKING VOICE RECORDER ---
@@ -2005,7 +2027,7 @@
                 } else {
                     const date = new Date(data.lastSeen);
                     statusEl.innerText = "last seen " + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    statusEl.style.color = "#888";
+                    statusEl.style.color = "#666";
                 }
             });
 
@@ -2014,7 +2036,7 @@
                 if(snap.exists()) {
                     card.style.display = 'block';
                     const loc = snap.val();
-                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/?q=${loc.lat},${loc.lng}`;
+                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/?q=$${loc.lat},${loc.lng}`;
                 } else {
                     card.style.display = 'none';
                 }
@@ -2089,17 +2111,17 @@
                         } else if (m.type === 'audio') {
                             messageContentHtml = `<audio controls src="${escapeHTML(m.mediaUrl)}" style="max-width: 220px; height: 35px; outline: none; margin:5px 0;"></audio>`;
                         } else if (m.type === 'document') {
-                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#aaa;">Click to download</div></div></a>`;
+                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.05); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#555;">Click to download</div></div></a>`;
                         } else if (m.type === 'contact') {
-                            messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
+                            messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#111;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
-                                <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                                    <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
-                                    <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
-                                    <i class="fas fa-map-marker-alt" style="color:var(--neon-cyan); font-size:24px; position:relative; z-index:2; text-shadow:0 0 10px var(--neon-cyan); transform:translateY(-5px);"></i>
-                                    <span style="position:relative; z-index:2; color:var(--neon-cyan); font-family:'Orbitron', sans-serif; font-size:11px; font-weight:bold; margin-top:8px; text-shadow:0 0 5px rgba(0,229,255,0.5);">LOCATION LOCKED</span>
+                            <a href="https://maps.google.com/?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                                <div style="background:#f4f6f8; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 115, 128, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                    <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 115, 128, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 115, 128, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
+                                    <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 115, 128, 0.15); border:1px solid rgba(0, 115, 128, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
+                                    <i class="fas fa-map-marker-alt" style="color:var(--neon-cyan); font-size:24px; position:relative; z-index:2; text-shadow:0 0 10px rgba(0, 115, 128, 0.3); transform:translateY(-5px);"></i>
+                                    <span style="position:relative; z-index:2; color:var(--neon-cyan); font-family:'Orbitron', sans-serif; font-size:11px; font-weight:bold; margin-top:8px; text-shadow:0 0 5px rgba(0,115,128,0.2);">LOCATION LOCKED</span>
                                 </div>
                             </a>`;
                         } else if (m.type === 'sticker') {
@@ -2140,7 +2162,7 @@
                     area.innerHTML = html;
                     area.scrollTop = area.scrollHeight; // Auto-scroll
                 } else {
-                    area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
+                    area.innerHTML = '<div style="font-size:12px; color:#666; text-align:center; margin: auto; background:rgba(0,0,0,0.05); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
                 }
             });
@@ -2186,7 +2208,7 @@
                 navigator.geolocation.clearWatch(geoWatchId);
                 geoWatchId = null; pingCount = 0;
                 btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST TO TARGET';
-                btn.style.background = "transparent"; btn.style.color = "var(--neon-cyan)"; btn.style.borderColor = "var(--neon-cyan)";
+                btn.style.background = "#fff"; btn.style.color = "var(--neon-cyan)"; btn.style.borderColor = "var(--neon-cyan)";
                 metrics.style.display = 'none'; locDisp.style.display = 'none';
                 
                 db.ref(`trackings/${currentAdminTargetPhone}/location/status`).set('offline').catch(err => console.warn(err)); 
@@ -2198,7 +2220,7 @@
                 geoWatchId = navigator.geolocation.watchPosition(
                     async (pos) => {
                         btn.innerHTML = '<i class="fas fa-times-circle"></i> STOP BROADCASTING';
-                        btn.style.background = "rgba(255,51,51,0.1)"; btn.style.color = "var(--danger)"; btn.style.borderColor = "var(--danger)";
+                        btn.style.background = "rgba(230,0,0,0.05)"; btn.style.color = "var(--danger)"; btn.style.borderColor = "var(--danger)";
                         metrics.style.display = 'grid'; locDisp.style.display = 'flex';
                         
                         pingCount++;
@@ -2278,13 +2300,13 @@
             db.ref(`trackings/${currentClientPhone}/admin_presence`).on('value', snap => {
                 const data = snap.val();
                 const statusEl = document.getElementById('client-chat-status');
-                if(!data) { statusEl.innerText = "Offline"; statusEl.style.color = "#888"; return; }
+                if(!data) { statusEl.innerText = "Offline"; statusEl.style.color = "#666"; return; }
                 if(data.status === 'online') {
                     statusEl.innerText = "Online"; statusEl.style.color = "var(--neon-green)";
                 } else {
                     const date = new Date(data.lastSeen);
                     statusEl.innerText = "last seen " + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                    statusEl.style.color = "#888";
+                    statusEl.style.color = "#666";
                 }
             });
 
@@ -2300,7 +2322,7 @@
                     
                     document.getElementById('map-loader-text').style.display = 'none';
                     document.getElementById('ext-map-link').style.display = 'block';
-                    document.getElementById('ext-map-link').href = `https://maps.google.com/?q=${data.lat},${data.lng}`;
+                    document.getElementById('ext-map-link').href = `https://maps.google.com/?q=$${data.lat},${data.lng}`;
 
                     const locDisp = document.getElementById('client-location-display');
                     if(data.locationName && data.locationName !== "Resolving...") {
@@ -2309,7 +2331,7 @@
                     }
 
                     if(Math.abs(data.lat - lastKnownLat) > 0.0001 || Math.abs(data.lng - lastKnownLng) > 0.0001) {
-                        const mapUrl = `https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`;
+                        const mapUrl = `https://maps.google.com/maps?q=$${data.lat},${data.lng}&z=15&output=embed`;
                         document.getElementById('client-map-iframe').src = mapUrl;
                         lastKnownLat = data.lat; lastKnownLng = data.lng;
                     }
@@ -2350,7 +2372,7 @@
                     });
                     feedArea.innerHTML = html;
                 } else {
-                    feedArea.innerHTML = '<div style="text-align:center; color:#555; font-size:13px; padding:20px; border:none; margin-left:-20px;">Awaiting communications...</div>';
+                    feedArea.innerHTML = '<div style="text-align:center; color:#666; font-size:13px; padding:20px; border:none; margin-left:-20px;">Awaiting communications...</div>';
                     isInitialLoad = false; 
                 }
             });
@@ -2399,17 +2421,17 @@
                         } else if (m.type === 'audio') {
                             messageContentHtml = `<audio controls src="${escapeHTML(m.mediaUrl)}" style="max-width: 220px; height: 35px; outline: none; margin:5px 0;"></audio>`;
                         } else if (m.type === 'document') {
-                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#aaa;">Click to download</div></div></a>`;
+                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.05); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#555;">Click to download</div></div></a>`;
                         } else if (m.type === 'contact') {
-                            messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
+                            messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.05); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#111;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/?q=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
-                                <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
-                                    <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
-                                    <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
-                                    <i class="fas fa-map-marker-alt" style="color:var(--neon-cyan); font-size:24px; position:relative; z-index:2; text-shadow:0 0 10px var(--neon-cyan); transform:translateY(-5px);"></i>
-                                    <span style="position:relative; z-index:2; color:var(--neon-cyan); font-family:'Orbitron', sans-serif; font-size:11px; font-weight:bold; margin-top:8px; text-shadow:0 0 5px rgba(0,229,255,0.5);">LOCATION LOCKED</span>
+                            <a href="https://maps.google.com/?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                                <div style="background:#f4f6f8; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 115, 128, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                    <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 115, 128, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 115, 128, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
+                                    <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 115, 128, 0.15); border:1px solid rgba(0, 115, 128, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
+                                    <i class="fas fa-map-marker-alt" style="color:var(--neon-cyan); font-size:24px; position:relative; z-index:2; text-shadow:0 0 10px rgba(0, 115, 128, 0.3); transform:translateY(-5px);"></i>
+                                    <span style="position:relative; z-index:2; color:var(--neon-cyan); font-family:'Orbitron', sans-serif; font-size:11px; font-weight:bold; margin-top:8px; text-shadow:0 0 5px rgba(0,115,128,0.2);">LOCATION LOCKED</span>
                                 </div>
                             </a>`;
                         } else if (m.type === 'sticker') {
@@ -2450,7 +2472,7 @@
                     area.innerHTML = html;
                     area.scrollTop = area.scrollHeight; 
                 } else {
-                    area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
+                    area.innerHTML = '<div style="font-size:12px; color:#666; text-align:center; margin: auto; background:rgba(0,0,0,0.05); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
                 }
             });
