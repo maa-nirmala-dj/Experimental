@@ -754,8 +754,8 @@
             "short_name": "MND Track",
             "start_url": ".",
             "display": "standalone",
-            "background_color": "#050508",
-            "theme_color": "#050508",
+           "background_color": "#ffffff",
+"theme_color": "#ffffff",
             "icons": [{"src": "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", "sizes": "512x512", "type": "image/png"}]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
