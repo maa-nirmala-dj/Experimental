@@ -725,10 +725,12 @@
                         <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('client')"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
+                
+                <button class="mn-btn btn-danger" style="margin-top: 12px; width: 100%; border-radius: 12px; padding: 10px; font-size: 11px; letter-spacing: 1px;" onclick="systemLogout(event)">
+                    <i class="fas fa-power-off"></i> DISCONNECT & LOGOUT
+                </button>
             </div>
         </div>
-
-        <button class="mn-btn btn-danger" style="max-width:100%; width:100%; flex-shrink:0;" onclick="systemLogout(event)"><i class="fas fa-power-off"></i> DISCONNECT TERMINAL</button>
     </div>
 
     <script>
@@ -857,9 +859,9 @@
             if (!str) return "";
             return String(str).replace(/[&<>'"]/g, 
                 tag => ({
-                    '&': '&',
-                    '<': '<',
-                    '>': '>',
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
                     "'": '&#39;',
                     '"': '&quot;'
                 }[tag] || tag)
@@ -1289,10 +1291,24 @@
             else document.getElementById('local-video').style.display = 'block';
 
             try {
-                // Determine media type (Video, Audio, or Screen Share)
+                // FIXED SCREEN SHARE LOGIC: Determine media type (Video, Audio, or Screen Share)
                 if (type === 'screen') {
                     try {
-                        RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: true });
+                        RTC.localStream = await navigator.mediaDevices.getDisplayMedia({ 
+                            video: true, 
+                            audio: false // Fixes most strict browser rejections for screen sharing
+                        });
+                        
+                        // We gracefully attempt to add the microphone separately so they can still talk while sharing
+                        try {
+                            const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                            const audioTrack = micStream.getAudioTracks()[0];
+                            if(audioTrack) {
+                                RTC.localStream.addTrack(audioTrack);
+                            }
+                        } catch(micErr) {
+                            console.warn("Could not attach mic to screen share", micErr);
+                        }
                     } catch (e) {
                         showToast("Screen sharing was denied or is unsupported.", "error");
                         endCallLocal();
@@ -1314,7 +1330,7 @@
 
                 RTC.localStream.getTracks().forEach(track => RTC.pc.addTrack(track, RTC.localStream));
                 
-                // If sharing screen, handle the user clicking "Stop sharing" on the browser bar
+                // If sharing screen, handle the user clicking "Stop sharing" on the browser native bar
                 if (type === 'screen') {
                     const screenTrack = RTC.localStream.getVideoTracks()[0];
                     if (screenTrack) {
