@@ -48,6 +48,9 @@
         body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
         input, textarea { user-select: auto; -webkit-user-select: auto; }
 
+        /* Flawless Background Lock for Chat */
+        body.chat-locked { overflow: hidden !important; touch-action: none !important; position: fixed !important; width: 100% !important; height: 100% !important; }
+
         .bg-map {
             position: fixed; inset: 0; z-index: -1; opacity: 0.15;
             background-image: 
@@ -93,7 +96,7 @@
         @keyframes fadeInView { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.4); border-radius: 10px; }
 
-        .app-footer { width: 100%; text-align: center; font-family: 'Cinzel', serif; font-size: 10px; color: rgba(212, 175, 55, 0.6); margin-top: auto; padding-top: 30px; letter-spacing: 1px; font-weight: 700; flex-shrink: 0; }
+        .app-footer { width: 100%; text-align: center; font-family: 'Cinzel', serif; font-size: 10px; color: rgba(212, 175, 55, 0.6); margin-top: auto; padding-top: 30px; letter-spacing: 1px; font-weight: 700; flex-shrink: 0; transition: opacity 0.3s ease; }
 
         /* =========================================================================
            UI COMPONENTS (Inputs, Buttons, Cards)
@@ -124,16 +127,26 @@
         .status-badge { background: rgba(0, 250, 154, 0.1); border: 1px solid var(--neon-green); color: var(--neon-green); padding: 5px 10px; border-radius: 30px; font-size: 10px; font-weight: 800; display: flex; align-items: center; gap: 4px; letter-spacing: 1px; box-shadow: 0 0 15px rgba(0, 250, 154, 0.2); white-space: nowrap; }
         .status-badge.offline { background: rgba(255, 51, 51, 0.1); border-color: var(--danger); color: var(--danger); box-shadow: 0 0 15px rgba(255, 51, 51, 0.2); }
         
-        .card { width: 100%; max-width: 600px; background: rgba(10,10,15,0.85); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 15px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-shrink: 0; box-sizing: border-box; overflow: hidden; }
+        .card { width: 100%; max-width: 600px; background: rgba(10,10,15,0.85); border: 1px solid rgba(255,255,255,0.05); padding: 15px; border-radius: 14px; margin-bottom: 15px; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); flex-shrink: 0; box-sizing: border-box; overflow: hidden; transition: opacity 0.3s ease; }
         .card.flex-grow { flex-grow: 1; max-height: none; }
         .card h3 { color: var(--gold); font-family: 'Cinzel'; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
         /* =========================================================================
-           WHATSAPP-STYLE CHAT ENGINE
+           WHATSAPP-STYLE CHAT ENGINE & DYNAMIC SIZING
            ========================================================================= */
-        .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; height: 75vh; max-height: 800px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); }
+        .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         
-        .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        /* Interactive Chat Sizing (Fully Fixed to Absolute 100% Zero-Gap Viewport) */
+        .chat-minimized { height: 30vh !important; max-height: 350px !important; }
+        .chat-fullscreen { 
+            position: fixed !important; inset: 0 !important; top: 0 !important; bottom: 0 !important; 
+            left: 0 !important; right: 0 !important; height: 100% !important; min-height: 100dvh !important; 
+            max-width: 100vw !important; width: 100vw !important; z-index: 9999999 !important; 
+            border-radius: 0 !important; margin: 0 !important; border: none !important;
+            background: var(--wa-bg) !important; padding-bottom: env(safe-area-inset-bottom) !important;
+        }
+
+        .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); flex-shrink: 0; }
         .chat-area { flex-grow: 1; overflow-y: auto; overflow-x: hidden; padding: 15px 12px; display: flex; flex-direction: column; gap: 10px; background-color: var(--wa-bg); background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px); background-size: 20px 20px; scroll-behavior: smooth; overscroll-behavior-y: none; }
         
         .bubble-wrapper { display: flex; align-items: center; width: 100%; position: relative; transition: background 0.2s; }
@@ -154,13 +167,13 @@
         .received .chat-reply-context { border-left-color: var(--neon-cyan); }
         .received .chat-reply-context .sender { color: var(--neon-cyan); }
         
-        .reply-banner { display: none; background: #202c33; padding: 8px 12px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 5; }
+        .reply-banner { display: none; background: #202c33; padding: 8px 12px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 5; flex-shrink: 0; }
         .reply-banner-content { flex-grow: 1; border-left: 4px solid var(--neon-green); padding-left: 10px; background: rgba(0,0,0,0.2); border-radius: 4px 8px 8px 4px; padding-top: 5px; padding-bottom: 5px; }
         .reply-banner-content .rep-title { font-size: 11px; color: var(--neon-green); font-weight: bold; margin-bottom: 2px; }
         .replying-to-text { color: #ccc; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90%; }
         .cancel-reply-btn { background: transparent; border: none; color: #8696a0; font-size: 18px; cursor: pointer; padding: 5px; }
 
-        .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(255,255,255,0.03); width: 100%; box-sizing: border-box; }
+        .chat-input-container { position: relative; padding: 8px 10px; background: var(--wa-header); z-index: 6; border-top: 1px solid rgba(255,255,255,0.03); width: 100%; box-sizing: border-box; flex-shrink: 0; }
         
         .chat-modern-pill { display: flex; align-items: center; background: var(--input-bg); border-radius: 30px; padding: 5px 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); width: 100%; transition: all 0.3s ease; box-sizing: border-box; }
         
@@ -222,10 +235,15 @@
         .modal-action-btn.delete { color: #ef4444; }
 
         /* =========================================================================
-           CALLING OVERLAYS (WEBRTC)
+           CALLING OVERLAYS (WEBRTC) + INSTAGRAM STYLE NOTIFICATION
            ========================================================================= */
         #incoming-call-overlay { display: none; }
         #incoming-call-overlay.active { display: flex; }
+        
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 20px var(--brand-purple), 0 0 40px var(--brand-purple); transform: scale(1); }
+            100% { box-shadow: 0 0 50px var(--brand-purple), 0 0 80px var(--neon-cyan); transform: scale(1.05); }
+        }
 
         #active-call-overlay { display: none; position: fixed; inset: 0; background: #000; z-index: 999999999; flex-direction: column; overflow: hidden; }
         
@@ -280,6 +298,28 @@
         .target-lock-details h4 { margin: 0; color: var(--neon-cyan); font-size: 12px; font-family: 'Orbitron'; letter-spacing: 1px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .target-lock-details p { margin: 2px 0 0 0; color: #fff; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         @keyframes targetPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.5; } }
+
+        /* =========================================================================
+           PREMIUM MEDIA VIEWER (Fullscreen Images & PDFs)
+           ========================================================================= */
+        #premium-media-viewer {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.98); backdrop-filter: blur(15px);
+            z-index: 9999999999; flex-direction: column; animation: fadeInView 0.3s ease forwards;
+        }
+        .media-viewer-header {
+            display: flex; justify-content: space-between; align-items: center; padding: 15px 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); flex-shrink: 0;
+        }
+        .media-viewer-content {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 10px;
+        }
+        .media-viewer-content img {
+            max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+            transition: transform 0.3s ease;
+        }
+        .media-viewer-content iframe, .media-viewer-content embed, .media-viewer-content object {
+            width: 100%; height: 100%; border: none; border-radius: 12px; background: #fff;
+        }
     </style>
 </head>
 <body> 
@@ -287,6 +327,20 @@
     <div class="bg-map"></div>
     <div class="grid-overlay"></div>
     <div id="toast-container"></div>
+
+    <!-- Premium Media Viewer Overlay -->
+    <div id="premium-media-viewer">
+        <div class="media-viewer-header">
+            <div id="media-title" style="color:var(--gold); font-family:'Cinzel'; font-weight:bold; font-size:16px;">Document Viewer</div>
+            <i class="fas fa-times" style="color:#fff; font-size:24px; cursor:pointer; text-shadow:0 2px 10px rgba(0,0,0,0.5);" onclick="closePremiumMediaViewer()"></i>
+        </div>
+        <div id="media-content-container" class="media-viewer-content">
+            <!-- Media will be injected here dynamically -->
+        </div>
+        <div style="padding:15px; text-align:center; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); flex-shrink:0;">
+            <a id="media-download-btn" href="#" download class="mn-btn btn-gold" style="display:inline-flex; width:auto; padding:12px 25px; box-shadow:0 10px 30px rgba(212,175,55,0.4);"><i class="fas fa-download"></i> SAVE TO DEVICE</a>
+        </div>
+    </div>
 
     <div id="install-banner" class="install-banner">
         <div style="display:flex; align-items:center; gap:12px;">
@@ -314,14 +368,24 @@
         </div>
     </div>
 
-    <div id="incoming-call-overlay" class="long-press-overlay">
-        <div class="long-press-modal" style="text-align:center; padding: 30px 20px; background: rgba(35, 49, 56, 0.95); border: 1px solid var(--gold);">
-            <div class="attach-icon-circle bg-cam" style="margin: 0 auto 15px auto; width: 60px; height: 60px; font-size: 28px; animation: targetPulse 1s infinite alternate; background: var(--brand-purple);"><i class="fas fa-video"></i></div>
-            <h3 style="color:#fff; margin-bottom: 5px; font-family:'Outfit';">Incoming Call</h3>
-            <p id="incoming-call-name" style="color:var(--neon-cyan); font-size:14px; margin-bottom: 25px; font-weight: bold;">HQ Dispatch</p>
-            <div style="display:flex; justify-content:center; gap:20px;">
-                <button class="mn-btn btn-danger" style="width:50px; height:50px; border-radius:50%; padding:0; margin:0;" onclick="declineCall()"><i class="fas fa-phone-slash"></i></button>
-                <button class="mn-btn btn-green" style="width:50px; height:50px; border-radius:50%; padding:0; background:#25D366; margin:0; animation: targetPulse 1s infinite alternate;" onclick="acceptCall()"><i class="fas fa-phone"></i></button>
+    <!-- Instagram-Style Incoming Call Notification UI -->
+    <div id="incoming-call-overlay" class="long-press-overlay" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); flex-direction: column; justify-content: space-evenly; align-items: center; padding: 40px 20px; z-index: 9999999999;">
+        <div style="text-align: center; margin-top: 15vh;">
+            <div class="attach-icon-circle bg-cam" style="margin: 0 auto 25px auto; width: 120px; height: 120px; font-size: 50px; animation: glowPulse 2s infinite ease-in-out; background: var(--brand-purple);">
+                <i class="fas fa-video"></i>
+            </div>
+            <h2 id="incoming-call-name" style="color: #fff; font-size: 32px; font-weight: 800; margin-bottom: 10px; font-family: 'Outfit';">HQ Dispatch</h2>
+            <p style="color: var(--neon-cyan); font-size: 16px; font-family: 'Outfit'; font-weight: 500; letter-spacing: 1px; animation: blink 1.5s infinite;">MND Secure Video Call...</p>
+        </div>
+        
+        <div style="display: flex; justify-content: space-around; width: 100%; max-width: 350px; margin-bottom: 10vh;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <button class="mn-btn btn-danger" style="width: 75px; height: 75px; border-radius: 50%; padding: 0; margin: 0; font-size: 30px; box-shadow: 0 10px 30px rgba(255,51,51,0.4);" onclick="declineCall()"><i class="fas fa-phone-slash"></i></button>
+                <span style="color: #fff; font-size: 15px; font-weight: 600;">Decline</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                <button class="mn-btn btn-green" style="width: 75px; height: 75px; border-radius: 50%; padding: 0; margin: 0; background: #25D366; font-size: 30px; box-shadow: 0 10px 30px rgba(37,211,102,0.4); animation: targetPulse 1s infinite alternate;" onclick="acceptCall()"><i class="fas fa-phone"></i></button>
+                <span style="color: #fff; font-size: 15px; font-weight: 600;">Accept</span>
             </div>
         </div>
     </div>
@@ -506,7 +570,16 @@
             </div>
         </div>
 
-        <div class="chat-card">
+        <!-- NEW: ADMIN LIVE ROUTE MAP -->
+        <div class="card" id="admin-route-card" style="display:none; border-color: var(--brand-purple); background:rgba(124,58,237,0.05); padding: 12px;">
+            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:10px; font-size:14px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
+            <div class="map-wrapper" style="height: 180px; margin-bottom: 0; border-color: rgba(124,58,237,0.3);">
+                <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
+                <iframe id="admin-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
+            </div>
+        </div>
+
+        <div class="chat-card chat-minimized" id="admin-chat-container" onclick="expandChat('admin')" ontouchstart="expandChat('admin')">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--neon-cyan); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-user-tie"></i></div>
@@ -516,9 +589,10 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
-                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'admin')"></i>
-                    <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'admin')"></i>
-                    <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'admin')"></i>
+                    <i class="fas fa-compress-alt" id="admin-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('admin', event)"></i>
+                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'admin', event)"></i>
+                    <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'admin', event)"></i>
+                    <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'admin', event)"></i>
                 </div>
             </div>
             
@@ -562,11 +636,11 @@
                         <i class="fas fa-camera" id="admin-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." oninput="handleInputTyping('admin')">
+                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." onfocus="expandChat('admin')" oninput="handleInputTyping('admin')">
                     
                     <div class="modern-right-icons" id="admin-right-icons">
-                        <i class="fas fa-microphone" onclick="startRecording('admin')"></i>
-                        <i class="fas fa-image" onclick="triggerFileInput('file-gallery', 'admin')"></i>
+                        <i class="fas fa-microphone" onclick="startRecording('admin', event)"></i>
+                        <i class="fas fa-image" onclick="triggerFileInput('file-gallery', 'admin', event)"></i>
                         <i class="far fa-sticky-note" onclick="toggleStickerMenu('admin', event)"></i>
                         <i class="fas fa-plus-circle" onclick="toggleAttachMenu('admin', event)"></i>
                     </div>
@@ -581,8 +655,8 @@
                         <span class="blinking-dot"></span> <span class="rec-timer" id="admin-record-time">00:00</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <button class="modern-left-btn" style="background:#555;" onclick="cancelRecording('admin')"><i class="fas fa-trash"></i></button>
-                        <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('admin')"><i class="fas fa-paper-plane"></i></button>
+                        <button class="modern-left-btn" style="background:#555;" onclick="cancelRecording('admin', event)"><i class="fas fa-trash"></i></button>
+                        <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('admin', event)"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -644,7 +718,16 @@
             </div>
         </div>
 
-        <div class="chat-card">
+        <!-- NEW: CLIENT LIVE ROUTE MAP -->
+        <div class="card" id="client-route-card" style="display:none; max-width:100%; width:100%; padding:12px; flex-shrink:0; border-color: var(--brand-purple); background:rgba(124,58,237,0.05);">
+            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:10px; font-size:14px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
+            <div class="map-wrapper" style="height: 180px; margin-bottom: 0; border-color: rgba(124,58,237,0.3);">
+                <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
+                <iframe id="client-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
+            </div>
+        </div>
+
+        <div class="chat-card chat-minimized" id="client-chat-container" onclick="expandChat('client')" ontouchstart="expandChat('client')">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--gold); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-headset"></i></div>
@@ -654,9 +737,10 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
-                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'client')"></i>
-                    <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'client')"></i>
-                    <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'client')"></i>
+                    <i class="fas fa-compress-alt" id="client-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('client', event)"></i>
+                    <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'client', event)"></i>
+                    <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'client', event)"></i>
+                    <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'client', event)"></i>
                 </div>
             </div>
             
@@ -700,11 +784,11 @@
                         <i class="fas fa-camera" id="client-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." oninput="handleInputTyping('client')">
+                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." onfocus="expandChat('client')" oninput="handleInputTyping('client')">
                     
                     <div class="modern-right-icons" id="client-right-icons">
-                        <i class="fas fa-microphone" onclick="startRecording('client')"></i>
-                        <i class="fas fa-image" onclick="triggerFileInput('file-gallery', 'client')"></i>
+                        <i class="fas fa-microphone" onclick="startRecording('client', event)"></i>
+                        <i class="fas fa-image" onclick="triggerFileInput('file-gallery', 'client', event)"></i>
                         <i class="far fa-sticky-note" onclick="toggleStickerMenu('client', event)"></i>
                         <i class="fas fa-plus-circle" onclick="toggleAttachMenu('client', event)"></i>
                     </div>
@@ -719,8 +803,8 @@
                         <span class="blinking-dot"></span> <span class="rec-timer" id="client-record-time">00:00</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <button class="modern-left-btn" style="background:#555;" onclick="cancelRecording('client')"><i class="fas fa-trash"></i></button>
-                        <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('client')"><i class="fas fa-paper-plane"></i></button>
+                        <button class="modern-left-btn" style="background:#555;" onclick="cancelRecording('client', event)"><i class="fas fa-trash"></i></button>
+                        <button class="modern-send-btn active" style="width:34px; margin:0;" onclick="stopAndSendRecording('client', event)"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
@@ -738,6 +822,89 @@
     </div>
 
     <script>
+        // --- PREMIUM MEDIA VIEWER LOGIC ---
+        function openPremiumMediaViewer(url, type, name) {
+            const viewer = document.getElementById('premium-media-viewer');
+            const container = document.getElementById('media-content-container');
+            const title = document.getElementById('media-title');
+            const downloadBtn = document.getElementById('media-download-btn');
+            
+            container.innerHTML = ''; // clear previous
+            title.innerText = name ? decodeURIComponent(name) : (type === 'image' ? 'Image Media' : 'Document');
+            downloadBtn.href = url;
+            downloadBtn.download = name || (type === 'image' ? 'image.jpg' : 'document.pdf');
+            
+            if (type === 'image') {
+                container.innerHTML = `<img src="${url}" />`;
+            } else if (type === 'document') {
+                container.innerHTML = `<embed src="${url}" type="application/pdf" style="width:100%; height:100%; border-radius:12px; background:white;"></embed>`;
+            }
+            
+            viewer.style.display = 'flex';
+        }
+
+        function closePremiumMediaViewer() {
+            const viewer = document.getElementById('premium-media-viewer');
+            const container = document.getElementById('media-content-container');
+            viewer.style.display = 'none';
+            container.innerHTML = '';
+        }
+
+        // --- TRUE FULLSCREEN CHAT LOGIC (100% GAPLESS) ---
+        function expandChat(role) {
+            const container = document.getElementById(role + '-chat-container');
+            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
+            
+            if (!container.classList.contains('chat-fullscreen')) {
+                // Safely hide all siblings to allow chat to naturally fill 100% of the screen seamlessly
+                Array.from(view.children).forEach(child => {
+                    if (child.id !== role + '-chat-container' && child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+                        child.setAttribute('data-original-display', child.style.display);
+                        child.setAttribute('data-hidden-by-chat', 'true');
+                        child.style.setProperty('display', 'none', 'important');
+                    }
+                });
+                
+                view.style.padding = '0'; // Remove default view padding
+                container.style.margin = '0'; 
+                container.style.borderRadius = '0';
+                
+                container.classList.remove('chat-minimized');
+                container.classList.add('chat-fullscreen');
+                
+                document.body.classList.add('chat-locked'); 
+                document.getElementById(role + '-chat-compress').style.display = 'inline-block';
+                
+                const area = document.getElementById(role + '-chat-area');
+                setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+            }
+        }
+        
+        function minimizeChat(role, e) {
+            if(e) e.stopPropagation();
+            const container = document.getElementById(role + '-chat-container');
+            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
+            
+            // Restore siblings
+            Array.from(view.children).forEach(child => {
+                if (child.hasAttribute('data-hidden-by-chat')) {
+                    child.style.display = child.getAttribute('data-original-display') || '';
+                    child.removeAttribute('data-hidden-by-chat');
+                    child.removeAttribute('data-original-display');
+                }
+            });
+
+            view.style.padding = '';
+            container.style.margin = '';
+            container.style.borderRadius = '';
+
+            container.classList.remove('chat-fullscreen');
+            container.classList.add('chat-minimized');
+            
+            document.body.classList.remove('chat-locked');
+            document.getElementById(role + '-chat-compress').style.display = 'none';
+        }
+
         // --- AUTO-LOGIN SYSTEM ---
         window.addEventListener('DOMContentLoaded', () => {
             const savedPhone = localStorage.getItem('mnd_auth_phone');
@@ -749,7 +916,7 @@
             }
         });
 
-        // --- NEW FEATURE: CLEAR LOGIN INPUTS ---
+        // --- CLEAR LOGIN INPUTS ---
         function clearLogin(e) {
             if(e) e.stopPropagation();
             document.getElementById('login-phone').value = '';
@@ -759,10 +926,6 @@
             btn.innerHTML = '<i class="fas fa-fingerprint"></i> INITIATE HANDSHAKE';
             btn.disabled = false;
         }
-
-        // --- SAFE SVG FOR MAP PIN FALLBACK ---
-        const mapSvgStr = `<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23202c33'/><path d='M0,50 Q100,150 200,50 T400,50' stroke='%23005c4b' stroke-width='3' fill='none'/><path d='M0,150 Q100,50 200,150 T400,150' stroke='%23005c4b' stroke-width='3' fill='none'/><circle cx='200' cy='100' r='30' fill='rgba(0, 229, 255, 0.15)'/><circle cx='200' cy='100' r='8' fill='%2300E5FF'/><path d='M200,100 L200,120' stroke='%2300E5FF' stroke-width='4'/><text x='200' y='145' font-family='sans-serif' font-size='16' fill='%2300E5FF' text-anchor='middle' font-weight='bold'>📍 Live Location</text></svg>`;
-        const mapDataURI = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(mapSvgStr);
 
         // --- PWA & APP INSTALL LOGIC ---
         const manifestData = {
@@ -873,9 +1036,9 @@
             if (!str) return "";
             return String(str).replace(/[&<>'"]/g, 
                 tag => ({
-                    '&': '&',
-                    '<': '<',
-                    '>': '>',
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
                     "'": '&#39;',
                     '"': '&quot;'
                 }[tag] || tag)
@@ -907,6 +1070,7 @@
 
         function toggleAttachMenu(role, e) {
             if(e) e.stopPropagation();
+            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-attach-menu');
             drawer.classList.toggle('show');
@@ -914,6 +1078,7 @@
 
         function toggleStickerMenu(role, e) {
             if(e) e.stopPropagation();
+            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-sticker-menu');
             drawer.classList.toggle('show');
@@ -922,7 +1087,7 @@
         // --- CHAT FUNCTIONS ---
         function copyChatText(text, e) {
             if(e) e.stopPropagation();
-            const rawText = text.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            const rawText = text.replace(/"/g, '"').replace(/'/g, "'");
             navigator.clipboard.writeText(rawText).then(() => {
                 showToast("Copied to clipboard!");
                 closeMsgModal(); 
@@ -935,8 +1100,9 @@
             if(e) e.stopPropagation();
             closeAllMenus();
             if (typeof closeMsgModal === 'function') closeMsgModal();
+            expandChat(role);
             
-            let rawText = text.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+            let rawText = text.replace(/"/g, '"').replace(/'/g, "'");
             let shortText = rawText.length > 40 ? rawText.substring(0, 40) + '...' : rawText;
             
             if(role === 'admin') {
@@ -988,6 +1154,9 @@
             const text = input.value.trim();
             if(!text) return;
 
+            input.value = '';
+            handleInputTyping('admin');
+
             const msgData = {
                 text: text, sender: 'admin',
                 time: new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}),
@@ -1001,11 +1170,14 @@
                 msgData.replyToText = adminReplyContext.text;
                 msgData.replyToSender = adminReplyContext.sender;
             }
+            
+            cancelReply('admin'); 
 
             db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).push(msgData).then(() => {
-                input.value = '';
-                handleInputTyping('admin');
-                cancelReply('admin');
+                setTimeout(() => {
+                    const area = document.getElementById('admin-chat-area');
+                    area.scrollTop = area.scrollHeight;
+                }, 50);
             }).catch(e => showToast("Send failed", "error"));
         }
 
@@ -1016,6 +1188,9 @@
             const input = document.getElementById('client-chat-input');
             const text = input.value.trim();
             if(!text) return;
+
+            input.value = '';
+            handleInputTyping('client');
 
             const msgData = {
                 text: text, sender: 'client',
@@ -1030,18 +1205,22 @@
                 msgData.replyToText = clientReplyContext.text;
                 msgData.replyToSender = clientReplyContext.sender;
             }
+            
+            cancelReply('client'); 
 
             db.ref(`trackings/${currentClientPhone}/client_messages`).push(msgData).then(() => {
-                input.value = '';
-                handleInputTyping('client');
-                cancelReply('client');
+                setTimeout(() => {
+                    const area = document.getElementById('client-chat-area');
+                    area.scrollTop = area.scrollHeight;
+                }, 50);
             }).catch(e => showToast("Send failed", "error"));
         }
 
         // --- MEDIA & ATTACHMENT FUNCTIONS ---
         let activeUploadRole = null;
 
-        function triggerFileInput(inputId, role) {
+        function triggerFileInput(inputId, role, e) {
+            if(e) e.stopPropagation();
             activeUploadRole = role;
             document.getElementById(inputId).click();
             closeAllMenus();
@@ -1102,7 +1281,7 @@
             showToast("Acquiring Live Location...");
             navigator.geolocation.getCurrentPosition((pos) => {
                 sendMediaMessage(role, 'location', null, { lat: pos.coords.latitude, lng: pos.coords.longitude });
-            }, () => { showToast("Failed to get location.", "error"); }, { enableHighAccuracy: true });
+            }, () => { showToast("Failed to get location.", "error"); }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
         }
 
         function sendSticker(role, src, e) {
@@ -1129,7 +1308,7 @@
                 });
             }, (err) => { 
                 showToast("Failed to get location. Ensure GPS is enabled.", "error"); 
-            }, { enableHighAccuracy: true });
+            }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
         }
 
         // --- VOICE RECORDER ---
@@ -1138,8 +1317,10 @@
         let recordInterval;
         let recordSeconds = 0;
 
-        async function startRecording(role) {
+        async function startRecording(role, e) {
+            if(e) e.stopPropagation();
             closeAllMenus();
+            expandChat(role);
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -1167,7 +1348,8 @@
             }
         }
 
-        function cancelRecording(role) {
+        function cancelRecording(role, e) {
+            if(e) e.stopPropagation();
             if(mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.stop();
                 mediaRecorder.stream.getTracks().forEach(track => track.stop());
@@ -1177,7 +1359,8 @@
             document.getElementById(role + '-default-pill').style.display = 'flex';
         }
 
-        function stopAndSendRecording(role) {
+        function stopAndSendRecording(role, e) {
+            if(e) e.stopPropagation();
             if(mediaRecorder && mediaRecorder.state !== 'inactive') {
                 mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
@@ -1193,6 +1376,19 @@
             clearInterval(recordInterval);
             document.getElementById(role + '-recording-pill').style.display = 'none';
             document.getElementById(role + '-default-pill').style.display = 'flex';
+        }
+
+        // --- SCREEN WAKE LOCK MANAGER ---
+        let wakeLock = null;
+        async function acquireWakeLock() {
+            if ('wakeLock' in navigator) {
+                try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+            }
+        }
+        function releaseWakeLock() {
+            if (wakeLock !== null) {
+                wakeLock.release().then(() => { wakeLock = null; });
+            }
         }
 
         // --- FULL WEBRTC LIVE CALLING & SCREEN SHARE ---
@@ -1253,12 +1449,15 @@
         }
 
         function playRingtone() {
-            if(navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000]); // Premium vibration pattern
+            // Aggressive vibration for incoming call like native phone
+            if(navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000]); 
             if(audioCtx) return;
             try {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 ringerInterval = setInterval(() => {
                     if(!audioCtx) return;
+                    if(navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 1000]);
+                    
                     const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(550, audioCtx.currentTime);
@@ -1272,7 +1471,7 @@
                     
                     osc.connect(gain); gain.connect(audioCtx.destination);
                     osc.start(); osc.stop(audioCtx.currentTime + 1.5);
-                }, 2000);
+                }, 4000);
             } catch(e) {}
         }
 
@@ -1282,8 +1481,10 @@
             if(audioCtx) { audioCtx.close(); audioCtx = null; }
         }
 
-        async function initCall(type, myRole) {
+        async function initCall(type, myRole, e) {
+            if(e) e.stopPropagation();
             closeAllMenus();
+            expandChat(myRole);
             RTC.role = myRole;
             RTC.isCaller = true;
             RTC.targetPhone = myRole === 'admin' ? currentAdminTargetPhone : currentClientPhone;
@@ -1420,9 +1621,10 @@
                 const data = snap.val();
                 
                 if(data && data.status === 'ringing' && data.caller !== myRole && !RTC.pc) {
+                    acquireWakeLock(); // Request Wake Lock
                     playRingtone();
-                    // Wake app if in background through service worker trigger setup
-                    showPushNotification("Incoming Call", `Incoming call from ${data.caller === 'admin' ? 'HQ Dispatch' : 'Client'}. Tap to open.`);
+                    // Send aggressive push notification
+                    showPushNotification("Incoming Secure Call", `Incoming ${data.type} call from ${data.caller === 'admin' ? 'HQ Dispatch' : 'Client'}.`, 'call');
                     
                     document.getElementById('incoming-call-name').innerText = data.caller === 'admin' ? 'HQ Dispatch' : (document.getElementById('session-c-name')?.innerText || 'Client');
                     document.getElementById('incoming-call-overlay').classList.add('active');
@@ -1431,6 +1633,7 @@
                 
                 if(!data || data.status === 'declined') {
                     stopRingtone();
+                    releaseWakeLock();
                     document.getElementById('incoming-call-overlay').classList.remove('active');
                     window.incomingCallData = null;
                     if(RTC.pc && !RTC.isCaller) endCallLocal();
@@ -1441,6 +1644,7 @@
 
         async function acceptCall() {
             stopRingtone();
+            releaseWakeLock();
             document.getElementById('incoming-call-overlay').classList.remove('active');
             const data = window.incomingCallData;
             if(!data) return;
@@ -1512,6 +1716,7 @@
 
         function declineCall() {
             stopRingtone();
+            releaseWakeLock();
             document.getElementById('incoming-call-overlay').classList.remove('active');
             if(window.incomingCallData) {
                 db.ref(`trackings/${window.incomingCallData.targetPhone}/call`).update({ status: 'declined' });
@@ -1530,6 +1735,7 @@
         function endCallLocal() {
             stopRingbackTone();
             stopRingtone();
+            releaseWakeLock();
             
             if (RTC.pc) { 
                 RTC.pc.ontrack = null;
@@ -1693,6 +1899,7 @@
             if(e.key === "Escape") {
                 closeMsgModal();
                 closeDispatchModal();
+                closePremiumMediaViewer();
             }
         });
 
@@ -1760,26 +1967,57 @@
         function handleMouseLeave(e) { clearTimeout(pressTimer); }
 
 
-        // --- PUSH NOTIFICATIONS SYSTEM WITH INLINE WORKER ENABLEMENT ---
+        // --- PUSH NOTIFICATIONS SYSTEM WITH INLINE WORKER & MESSAGING ---
         const swCode = `
         self.addEventListener('push', function(event) {
-            const data = event.data ? event.data.json() : {};
+            const data = event.data ? event.data.json() : { title: 'MND Track', body: 'New logistics update.', type: 'message' };
+            const isCall = data.type === 'call';
+
+            // Instagram-like aggressive configuration for calls
+            const options = {
+                body: data.body,
+                icon: 'https://i.postimg.cc/52vLtJBM/1000095487-(2).png',
+                vibrate: isCall ? [1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000] : [200, 100, 200],
+                requireInteraction: isCall, // Prevents notification from disappearing automatically
+                tag: isCall ? 'mnd-incoming-call' : 'mnd-msg-' + Date.now(),
+                renotify: true,
+                data: { url: '/' },
+                actions: isCall ? [
+                    { action: 'answer', title: '✅ Answer Call' },
+                    { action: 'decline', title: '❌ Decline' }
+                ] : []
+            };
+
+            // Wake up foreground clients to start playing the loop sound immediately
+            self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(clients => {
+                clients.forEach(client => {
+                    client.postMessage({ type: 'incoming_push', data: data });
+                });
+            });
+
             event.waitUntil(
-                self.registration.showNotification(data.title || 'MND Track', {
-                    body: data.body || 'New update available.',
-                    icon: 'https://i.postimg.cc/52vLtJBM/1000095487-(2).png',
-                    vibrate: [200, 100, 200, 100, 200, 100, 200],
-                    requireInteraction: true
-                })
+                self.registration.showNotification(data.title, options)
             );
         });
+
         self.addEventListener('notificationclick', function(event) {
             event.notification.close();
+            
+            if(event.action === 'decline') {
+                event.waitUntil(
+                    self.clients.matchAll({ includeUncontrolled: true, type: 'window' }).then(clients => {
+                        clients.forEach(client => client.postMessage({ type: 'call_action', action: 'decline' }));
+                    })
+                );
+                return;
+            }
+
             event.waitUntil(
-                clients.matchAll({ type: 'window' }).then(windowClients => {
+                clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
                     for (let i = 0; i < windowClients.length; i++) {
                         let client = windowClients[i];
                         if (client.url === '/' && 'focus' in client) {
+                            client.postMessage({ type: 'call_action', action: 'answer' });
                             return client.focus();
                         }
                     }
@@ -1797,6 +2035,19 @@
             navigator.serviceWorker.register(swUrl).then(function(registration) {
                 console.log('SW Registered for Wake/Push Handling');
             }).catch(function(error) {});
+
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data.type === 'incoming_push' && event.data.data.type === 'call') {
+                    acquireWakeLock();
+                    playRingtone();
+                } else if (event.data.type === 'call_action') {
+                    if (event.data.action === 'answer') {
+                        acceptCall();
+                    } else if (event.data.action === 'decline') {
+                        declineCall();
+                    }
+                }
+            });
         }
 
         function requestNotificationPermission() {
@@ -1819,12 +2070,19 @@
             } catch(e) {}
         }
 
-        function showPushNotification(title, body) {
+        function showPushNotification(title, body, type = 'message') {
             playPremiumChime();
+            const isCall = type === 'call';
+
             if ("Notification" in window && Notification.permission === "granted" && 'serviceWorker' in navigator) {
                 navigator.serviceWorker.ready.then(function(registration) {
                     registration.showNotification(title, {
-                        body: body, icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", vibrate: [200, 100, 200, 100, 200], tag: "mnd-logistics", renotify: true, requireInteraction: true
+                        body: body, 
+                        icon: "https://i.postimg.cc/52vLtJBM/1000095487-(2).png", 
+                        vibrate: isCall ? [1000, 500, 1000, 500, 1000, 500, 1000] : [200, 100, 200, 100, 200], 
+                        tag: isCall ? "mnd-incoming-call" : "mnd-logistics", 
+                        renotify: true, 
+                        requireInteraction: isCall
                     });
                 });
             } else if ("Notification" in window && Notification.permission === "granted") {
@@ -1879,6 +2137,33 @@
         let processedUpdateKeys = new Set(); let processedChatKeys = new Set();
         let isInitialLoad = true; let isChatInitialLoad = true;
         let adminReplyContext = null; let clientReplyContext = null;
+
+        // Route Coordination Variables
+        let globalAdminLat = null; let globalAdminLng = null;
+        let globalClientEventLat = null; let globalClientEventLng = null;
+
+        // --- LIVE ROUTE ENGINE ---
+        function updateLiveRouteMap(role) {
+            if (globalAdminLat && globalAdminLng && globalClientEventLat && globalClientEventLng) {
+                const mapUrl = `https://maps.google.com/maps?saddr=${globalAdminLat},${globalAdminLng}&daddr=${globalClientEventLat},${globalClientEventLng}&output=embed`;
+                
+                if (role === 'admin') {
+                    const card = document.getElementById('admin-route-card');
+                    const iframe = document.getElementById('admin-route-iframe');
+                    if(card) {
+                        card.style.display = 'block';
+                        if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                    }
+                } else if (role === 'client') {
+                    const card = document.getElementById('client-route-card');
+                    const iframe = document.getElementById('client-route-iframe');
+                    if(card) {
+                        card.style.display = 'block';
+                        if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                    }
+                }
+            }
+        }
 
         // --- VIEW ROUTER ---
         function switchView(viewId) {
@@ -2065,7 +2350,9 @@
                 const card = document.getElementById('admin-client-loc-card');
                 if(snap.exists()) {
                     card.style.display = 'block'; const loc = snap.val();
-                    document.getElementById('admin-view-client-map').href = `https://maps.google.com/maps?q=$${loc.lat},${loc.lng}`;
+                    globalClientEventLat = loc.lat; globalClientEventLng = loc.lng;
+                    updateLiveRouteMap('admin');
+                    document.getElementById('admin-view-client-map').href = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lng}`;
                 } else { card.style.display = 'none'; }
             });
 
@@ -2106,7 +2393,8 @@
                         }
                         processedChatKeys.add(key);
                         const isMe = m.sender === 'admin'; const bubbleClass = isMe ? 'sent' : 'received'; 
-                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "\\\"");
                         let replyHtml = '';
                         if(m.replyToText) {
                             const senderName = m.replyToSender === 'admin' ? 'HQ Dispatch' : escapeHTML(name);
@@ -2115,16 +2403,22 @@
 
                         let messageContentHtml = '';
                         if (m.type === 'image' || m.type === 'camera') {
-                            messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block;" onclick="window.open('${escapeHTML(m.mediaUrl)}', '_blank')">`;
+                            messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block; border: 1px solid rgba(255,255,255,0.1);" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'image', 'Image Media')">`;
                         } else if (m.type === 'audio') {
                             messageContentHtml = `<audio controls src="${escapeHTML(m.mediaUrl)}" style="max-width: 220px; height: 35px; outline: none; margin:5px 0;"></audio>`;
                         } else if (m.type === 'document') {
-                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#aaa;">Click to download</div></div></a>`;
+                            messageContentHtml = `<div style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.4); padding:12px; border-radius:8px; border: 1px solid var(--neon-cyan); color:var(--neon-cyan); cursor:pointer; margin:5px 0;" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'document', '${escapeHTML(m.fileName || 'Document')}')">
+                                <i class="fas fa-file-pdf" style="font-size:24px;"></i>
+                                <div>
+                                    <div style="font-weight:bold; font-size:13px; color:#fff;">${escapeHTML(m.fileName || 'Document')}</div>
+                                    <div style="font-size:10px; color:#aaa;">Tap to view securely</div>
+                                </div>
+                            </div>`;
                         } else if (m.type === 'contact') {
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/maps?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://www.google.com/maps/search/?api=1&query=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
@@ -2163,7 +2457,10 @@
                     });
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).update(updatesToRead); }
-                    isChatInitialLoad = false; area.innerHTML = html; area.scrollTop = area.scrollHeight; 
+                    isChatInitialLoad = false; area.innerHTML = html; 
+                    if(document.getElementById('admin-chat-container').classList.contains('chat-fullscreen')){
+                        area.scrollTop = area.scrollHeight; 
+                    }
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2229,6 +2526,9 @@
                         document.getElementById('a-acc').innerText = "±" + Math.round(pos.coords.accuracy) + "m";
                         document.getElementById('a-ping').innerText = pingCount;
 
+                        globalAdminLat = pos.coords.latitude; globalAdminLng = pos.coords.longitude;
+                        updateLiveRouteMap('admin');
+
                         let locName = "Resolving...";
                         if(pingCount % 10 === 1) { 
                             locName = await fetchLocationName(pos.coords.latitude, pos.coords.longitude);
@@ -2248,7 +2548,7 @@
                         if(geoWatchId !== null) navigator.geolocation.clearWatch(geoWatchId);
                         geoWatchId = null; btn.innerHTML = '<i class="fas fa-location-arrow"></i> INITIATE BROADCAST';
                     }, 
-                    { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+                    { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 }
                 );
             }
         }
@@ -2293,10 +2593,20 @@
                 }
             });
 
+            db.ref(`trackings/${currentClientPhone}/client_location`).on('value', (snap) => {
+                if(snap.exists()) {
+                    globalClientEventLat = snap.val().lat; globalClientEventLng = snap.val().lng;
+                    updateLiveRouteMap('client');
+                }
+            });
+
             db.ref(`trackings/${currentClientPhone}/location`).on('value', (snapshot) => {
                 const badge = document.getElementById('client-conn-status');
                 if(snapshot.exists() && snapshot.val().status === 'online') {
                     const data = snapshot.val();
+                    globalAdminLat = data.lat; globalAdminLng = data.lng;
+                    updateLiveRouteMap('client');
+                    
                     badge.innerHTML = '<i class="fas fa-circle fa-beat"></i> ONLINE'; badge.className = 'status-badge';
                     document.getElementById('client-gps-time').innerHTML = `<span style="color:var(--neon-green);">Signal Locked (${escapeHTML(data.time)})</span>`;
                     document.getElementById('c-speed').innerText = data.speed + " km/h";
@@ -2305,7 +2615,7 @@
                     
                     document.getElementById('map-loader-text').style.display = 'none';
                     document.getElementById('ext-map-link').style.display = 'block';
-                    document.getElementById('ext-map-link').href = `https://maps.google.com/maps?q=$${data.lat},${data.lng}`;
+                    document.getElementById('ext-map-link').href = `https://www.google.com/maps/search/?api=1&query=${data.lat},${data.lng}`;
 
                     const locDisp = document.getElementById('client-location-display');
                     if(data.locationName && data.locationName !== "Resolving...") {
@@ -2313,7 +2623,7 @@
                     }
 
                     if(Math.abs(data.lat - lastKnownLat) > 0.0001 || Math.abs(data.lng - lastKnownLng) > 0.0001) {
-                        const mapUrl = `https://maps.google.com/maps?q=$${data.lat},${data.lng}&z=15&output=embed`;
+                        const mapUrl = `https://maps.google.com/maps?q=${data.lat},${data.lng}&z=15&output=embed`;
                         document.getElementById('client-map-iframe').src = mapUrl;
                         lastKnownLat = data.lat; lastKnownLng = data.lng;
                     }
@@ -2362,7 +2672,8 @@
                         processedChatKeys.add(key);
 
                         const isMe = m.sender === 'client'; const bubbleClass = isMe ? 'sent' : 'received';
-                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                        
+                        const safeTextUI = escapeHTML(m.text || ''); const safeTextJS = (m.text||'').replace(/'/g, "\\'").replace(/"/g, "\\\"");
                         
                         let replyHtml = '';
                         if(m.replyToText) {
@@ -2372,16 +2683,22 @@
 
                         let messageContentHtml = '';
                         if (m.type === 'image' || m.type === 'camera') {
-                            messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block;" onclick="window.open('${escapeHTML(m.mediaUrl)}', '_blank')">`;
+                            messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block; border: 1px solid rgba(255,255,255,0.1);" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'image', 'Image Media')">`;
                         } else if (m.type === 'audio') {
                             messageContentHtml = `<audio controls src="${escapeHTML(m.mediaUrl)}" style="max-width: 220px; height: 35px; outline: none; margin:5px 0;"></audio>`;
                         } else if (m.type === 'document') {
-                            messageContentHtml = `<a href="${escapeHTML(m.mediaUrl)}" download="${escapeHTML(m.fileName || 'document')}" style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.3); padding:12px; border-radius:8px; color:var(--neon-cyan); text-decoration:none; margin:5px 0;"><i class="fas fa-file-alt" style="font-size:24px;"></i> <div><div style="font-weight:bold; font-size:13px;">${escapeHTML(m.fileName || 'Document')}</div><div style="font-size:10px; color:#aaa;">Click to download</div></div></a>`;
+                            messageContentHtml = `<div style="display:flex; align-items:center; gap:10px; background:rgba(0,0,0,0.4); padding:12px; border-radius:8px; border: 1px solid var(--neon-cyan); color:var(--neon-cyan); cursor:pointer; margin:5px 0;" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'document', '${escapeHTML(m.fileName || 'Document')}')">
+                                <i class="fas fa-file-pdf" style="font-size:24px;"></i>
+                                <div>
+                                    <div style="font-weight:bold; font-size:13px; color:#fff;">${escapeHTML(m.fileName || 'Document')}</div>
+                                    <div style="font-size:10px; color:#aaa;">Tap to view securely</div>
+                                </div>
+                            </div>`;
                         } else if (m.type === 'contact') {
                             messageContentHtml = `<div style="display:flex; align-items:center; gap:12px; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin:5px 0; min-width: 150px;"><div style="width:40px; height:40px; min-width:40px; border-radius:50%; background:#3b82f6; display:flex; justify-content:center; align-items:center; color:#fff; font-size:18px;"><i class="fas fa-user"></i></div><div><div style="font-weight:bold; font-size:14px; color:#fff;">${escapeHTML(m.contactName)}</div><a href="tel:${escapeHTML(m.contactPhone)}" style="color:var(--neon-cyan); font-size:12px; text-decoration:none;">${escapeHTML(m.contactPhone)}</a></div></div>`;
                         } else if (m.type === 'location') {
                             messageContentHtml = `
-                            <a href="https://maps.google.com/maps?q=$${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
+                            <a href="https://www.google.com/maps/search/?api=1&query=${m.lat},${m.lng}" target="_blank" style="display:block; text-decoration:none; color:inherit; margin:5px 0;">
                                 <div style="background:#111b21; border-radius:10px; overflow:hidden; position:relative; width:100%; max-width:260px; height:130px; border:1px solid rgba(0, 229, 255, 0.2); display:flex; flex-direction:column; justify-content:center; align-items:center;">
                                     <div style="position:absolute; inset:0; background-image:linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px); background-size:15px 15px; opacity:0.6;"></div>
                                     <div style="position:absolute; width:60px; height:60px; border-radius:50%; background:rgba(0, 229, 255, 0.15); border:1px solid rgba(0, 229, 255, 0.4); animation: targetPulse 1.5s infinite alternate;"></div>
@@ -2420,7 +2737,10 @@
                     });
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentClientPhone}/client_messages`).update(updatesToRead); }
-                    isChatInitialLoad = false; area.innerHTML = html; area.scrollTop = area.scrollHeight; 
+                    isChatInitialLoad = false; area.innerHTML = html; 
+                    if(document.getElementById('client-chat-container').classList.contains('chat-fullscreen')){
+                        area.scrollTop = area.scrollHeight; 
+                    }
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2440,6 +2760,7 @@
             db.ref('trackings').off(); 
             if(currentClientPhone) {
                 db.ref(`trackings/${currentClientPhone}/location`).off();
+                db.ref(`trackings/${currentClientPhone}/client_location`).off();
                 db.ref(`trackings/${currentClientPhone}/updates`).off();
                 db.ref(`trackings/${currentClientPhone}/client_messages`).off();
                 db.ref(`trackings/${currentClientPhone}/admin_presence`).off();
