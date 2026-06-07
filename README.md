@@ -48,6 +48,9 @@
         body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
         input, textarea { user-select: auto; -webkit-user-select: auto; }
 
+        /* Flawless Background Lock for Chat */
+        body.chat-locked { overflow: hidden !important; touch-action: none !important; position: fixed !important; width: 100% !important; height: 100% !important; }
+
         .bg-map {
             position: fixed; inset: 0; z-index: -1; opacity: 0.15;
             background-image: 
@@ -137,6 +140,16 @@
             margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; 
             box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
             height: 75vh; min-height: 500px; /* Fully expanded dominant view */
+        }
+
+        /* Interactive Chat Sizing (Fully Fixed to Absolute 100% Zero-Gap Viewport) */
+        .chat-minimized { height: 30vh !important; max-height: 350px !important; }
+        .chat-fullscreen { 
+            position: fixed !important; inset: 0 !important; top: 0 !important; bottom: 0 !important; 
+            left: 0 !important; right: 0 !important; height: 100% !important; min-height: 100dvh !important; 
+            max-width: 100vw !important; width: 100vw !important; z-index: 9999999 !important; 
+            border-radius: 0 !important; margin: 0 !important; border: none !important;
+            background: var(--wa-bg) !important; padding-bottom: env(safe-area-inset-bottom) !important;
         }
 
         .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); flex-shrink: 0; }
@@ -321,6 +334,19 @@
     <div class="grid-overlay"></div>
     <div id="toast-container"></div>
 
+    <!-- Notification History Drawer -->
+    <div id="notification-drawer" class="long-press-overlay" onclick="closeNotifDrawer()">
+        <div class="long-press-modal" style="height: 60vh; max-height: 400px; display: flex; flex-direction: column; padding: 0; max-width: 350px; background: rgba(15,15,20,0.98); border: 1px solid rgba(212,175,55,0.3);" onclick="event.stopPropagation()">
+            <div style="padding: 15px; background: rgba(0,0,0,0.8); border-bottom: 2px solid var(--gold); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: var(--gold); font-family: 'Cinzel'; margin: 0; font-size: 16px;"><i class="fas fa-bell"></i> System Alerts</h3>
+                <i class="fas fa-times" style="color: #fff; cursor: pointer; font-size: 18px;" onclick="closeNotifDrawer()"></i>
+            </div>
+            <div id="notif-list-area" style="flex-grow: 1; overflow-y: auto; padding: 15px; background: transparent; display: flex; flex-direction: column; gap: 10px;">
+                <div style="text-align:center; color:#555; font-size:12px; padding:20px;">No recent alerts.</div>
+            </div>
+        </div>
+    </div>
+
     <!-- Premium Media Viewer Overlay -->
     <div id="premium-media-viewer">
         <div class="media-viewer-header">
@@ -357,6 +383,7 @@
             </div>
             <button class="modal-action-btn" onclick="execModalReply()"><i class="fas fa-reply"></i> Reply</button>
             <button class="modal-action-btn" onclick="execModalCopy()"><i class="fas fa-copy"></i> Copy Text</button>
+            <button class="modal-action-btn" id="modal-btn-edit" onclick="execModalEdit()" style="color: var(--neon-cyan);"><i class="fas fa-pen"></i> Edit Message</button>
             <button class="modal-action-btn delete" id="modal-btn-delete" onclick="execModalDelete()"><i class="fas fa-trash"></i> Delete Message</button>
         </div>
     </div>
@@ -452,7 +479,10 @@
                 <h2 style="color:var(--gold); font-family:'Cinzel'; margin:0; font-size:18px;">Command Center</h2>
                 <span style="font-size:10px; color:#888;">Authorized Personnel Only</span>
             </div>
-            <div class="status-badge"><i class="fas fa-link"></i> DB SYNCED</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="status-badge"><i class="fas fa-link"></i> DB SYNCED</div>
+                <i class="fas fa-bell" style="color:var(--gold); font-size:18px; cursor:pointer;" onclick="openNotifDrawer()"></i>
+            </div>
         </div>
 
         <div class="card">
@@ -476,6 +506,13 @@
                 <div style="font-family:'Orbitron', monospace; font-size:32px; color:var(--neon-green); font-weight:900; letter-spacing:6px; margin:8px 0; text-shadow: 0 0 15px rgba(0,250,154,0.4);" id="display-new-pin">000000</div>
                 <button class="mn-btn btn-green" onclick="openDispatchModal(event)"><i class="fas fa-share-alt"></i> DISPATCH OPTIONS</button>
             </div>
+        </div>
+
+        <div class="card" style="border-color:var(--danger); background:rgba(255,51,51,0.05);">
+            <h3 style="color:var(--danger); border-bottom-color:rgba(255,51,51,0.3);"><i class="fas fa-broadcast-tower"></i> Global Broadcast System</h3>
+            <p style="font-size:10px; color:#aaa; margin-bottom:12px;">Send an instant push notification alert to EVERY single client in the database.</p>
+            <textarea id="admin-global-msg" class="mn-input" rows="2" style="resize:none; padding:12px; border-color:rgba(255,51,51,0.3);" placeholder="Message all active clients..."></textarea>
+            <button class="mn-btn btn-danger" style="margin-top:10px; background:linear-gradient(135deg, #ff3333 0%, #cc0000 100%);" onclick="sendGlobalAlert()"><i class="fas fa-bullhorn"></i> SEND GLOBAL ALERT</button>
         </div>
 
         <div class="card flex-grow">
@@ -507,7 +544,10 @@
                 <h2 style="color:var(--neon-cyan); font-family:'Orbitron'; margin:0; font-size:16px;">Targeted Session</h2>
                 <span style="font-size:10px; color:#888;">Direct Encrypted Link</span>
             </div>
-            <button class="action-icon-btn" onclick="closeAdminSession(event)" style="color:var(--gold); border:1px solid var(--gold); border-radius:50%; width:30px; height:30px; background:rgba(212,175,55,0.1); flex-shrink: 0;"><i class="fas fa-times"></i></button>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <i class="fas fa-bell" style="color:var(--gold); font-size:18px; cursor:pointer;" onclick="openNotifDrawer()"></i>
+                <button class="action-icon-btn" onclick="closeAdminSession(event)" style="color:var(--gold); border:1px solid var(--gold); border-radius:50%; width:30px; height:30px; background:rgba(212,175,55,0.1); flex-shrink: 0;"><i class="fas fa-times"></i></button>
+            </div>
         </div>
 
         <div class="target-lock-banner">
@@ -566,15 +606,20 @@
         <!-- NEW: ADMIN LIVE ROUTE MAP -->
         <div class="card" id="admin-route-card" style="display:none; border-color: var(--brand-purple); background:rgba(124,58,237,0.05); padding: 15px; width: 100%; max-width: 100%;">
             <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:15px; font-size:16px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
-            <div class="map-wrapper" style="height: 350px; margin-bottom: 15px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
+            
+            <div class="map-wrapper" style="height: 350px; margin-bottom: 12px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
                 <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
-                <iframe id="admin-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
+                <iframe id="admin-route-iframe" class="map-iframe" style="pointer-events: auto !important;" src="" onload="this.classList.add('loaded')"></iframe>
             </div>
-            <a id="admin-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:13px; padding:14px; text-decoration:none; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN ROUTE IN GOOGLE MAPS</a>
+            
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <button class="mn-btn btn-dark" style="font-size:11px; padding:12px; flex:1; border-color:rgba(124,58,237,0.5); color:var(--brand-purple);" onclick="forceRefreshMap('admin')"><i class="fas fa-sync-alt"></i> REFRESH MAP</button>
+                <a id="admin-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:12px; padding:12px; text-decoration:none; flex:2; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN IN GOOGLE MAPS</a>
+            </div>
         </div>
 
         <!-- NATIVE FULLSCREEN CHAT CARD -->
-        <div class="chat-card" id="admin-chat-container">
+        <div class="chat-card chat-minimized" id="admin-chat-container">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--neon-cyan); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-user-tie"></i></div>
@@ -584,6 +629,7 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
+                    <i class="fas fa-compress-alt" id="admin-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('admin', event)"></i>
                     <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'admin', event)"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'admin', event)"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'admin', event)"></i>
@@ -630,7 +676,7 @@
                         <i class="fas fa-camera" id="admin-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." oninput="handleInputTyping('admin')">
+                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." onfocus="expandChat('admin')" oninput="handleInputTyping('admin')">
                     
                     <div class="modern-right-icons" id="admin-right-icons">
                         <i class="fas fa-microphone" onclick="startRecording('admin', event)"></i>
@@ -664,7 +710,10 @@
                 <h2 id="client-dash-event" style="color:var(--gold); font-family:'Cinzel'; margin:0; font-size:16px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Loading Event...</h2>
                 <span style="font-size:10px; color:#888;">Auth: <span id="client-dash-name" style="color:#fff;">Loading...</span></span>
             </div>
-            <div class="status-badge" id="client-conn-status"><i class="fas fa-circle fa-beat"></i> ONLINE</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div class="status-badge" id="client-conn-status"><i class="fas fa-circle fa-beat"></i> ONLINE</div>
+                <i class="fas fa-bell" style="color:var(--gold); font-size:18px; cursor:pointer;" onclick="openNotifDrawer()"></i>
+            </div>
         </div>
 
         <div class="card" style="max-width:100%; width:100%; padding: 12px; background:rgba(0, 250, 154, 0.05); border-color:var(--neon-green); margin-bottom:12px; flex-shrink:0;">
@@ -715,15 +764,18 @@
         <!-- NEW: CLIENT LIVE ROUTE MAP -->
         <div class="card" id="client-route-card" style="display:none; max-width:100%; width:100%; padding:15px; flex-shrink:0; border-color: var(--brand-purple); background:rgba(124,58,237,0.05);">
             <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:15px; font-size:16px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
-            <div class="map-wrapper" style="height: 350px; margin-bottom: 15px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
+            <div class="map-wrapper" style="height: 350px; margin-bottom: 12px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
                 <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
-                <iframe id="client-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
+                <iframe id="client-route-iframe" class="map-iframe" style="pointer-events: auto !important;" src="" onload="this.classList.add('loaded')"></iframe>
             </div>
-            <a id="client-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:13px; padding:14px; text-decoration:none; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN ROUTE IN GOOGLE MAPS</a>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <button class="mn-btn btn-dark" style="font-size:11px; padding:12px; flex:1; border-color:rgba(124,58,237,0.5); color:var(--brand-purple);" onclick="forceRefreshMap('client')"><i class="fas fa-sync-alt"></i> REFRESH MAP</button>
+                <a id="client-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:12px; padding:12px; text-decoration:none; flex:2; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN IN GOOGLE MAPS</a>
+            </div>
         </div>
 
         <!-- NATIVE FULLSCREEN CHAT CARD -->
-        <div class="chat-card" id="client-chat-container">
+        <div class="chat-card chat-minimized" id="client-chat-container">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--gold); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-headset"></i></div>
@@ -733,6 +785,7 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
+                    <i class="fas fa-compress-alt" id="client-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('client', event)"></i>
                     <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'client', event)"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'client', event)"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'client', event)"></i>
@@ -779,7 +832,7 @@
                         <i class="fas fa-camera" id="client-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." oninput="handleInputTyping('client')">
+                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." onfocus="expandChat('client')" oninput="handleInputTyping('client')">
                     
                     <div class="modern-right-icons" id="client-right-icons">
                         <i class="fas fa-microphone" onclick="startRecording('client', event)"></i>
@@ -817,6 +870,98 @@
     </div>
 
     <script>
+        // --- NOTIFICATION DRAWER & HISTORY LOGIC ---
+        function openNotifDrawer() {
+            document.getElementById('notification-drawer').classList.add('active');
+            renderNotifications();
+        }
+
+        function closeNotifDrawer() {
+            document.getElementById('notification-drawer').classList.remove('active');
+        }
+        
+        function renderNotifications() {
+            const listArea = document.getElementById('notif-list-area');
+            const phoneToFetch = document.getElementById('view-admin').classList.contains('active-view') || document.getElementById('view-admin-session').classList.contains('active-view') 
+                ? 'admin_system' 
+                : currentClientPhone;
+                
+            if(!phoneToFetch) return;
+
+            db.ref(`trackings/${phoneToFetch}/notifications`).orderByChild('time').limitToLast(20).once('value').then(snap => {
+                if(snap.exists()) {
+                    let html = '';
+                    const notifs = [];
+                    snap.forEach(child => notifs.push({key: child.key, ...child.val()}));
+                    notifs.reverse().forEach(n => {
+                        const icon = n.type === 'login' ? 'fa-sign-in-alt' : (n.type === 'global' ? 'fa-bullhorn' : 'fa-bell');
+                        const color = n.type === 'login' ? 'var(--neon-green)' : (n.type === 'global' ? 'var(--danger)' : 'var(--gold)');
+                        
+                        html += `
+                        <div style="background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border-left: 3px solid ${color}; display: flex; gap: 12px; align-items: flex-start;">
+                            <div style="color: ${color}; font-size: 16px; margin-top: 2px;"><i class="fas ${icon}"></i></div>
+                            <div>
+                                <h4 style="margin: 0 0 3px 0; font-size: 13px; color: #fff;">${escapeHTML(n.title)}</h4>
+                                <p style="margin: 0; font-size: 11px; color: #ccc;">${escapeHTML(n.body)}</p>
+                                <span style="font-size: 9px; color: #888; display: block; margin-top: 5px;">${new Date(n.time).toLocaleString()}</span>
+                            </div>
+                        </div>`;
+                    });
+                    listArea.innerHTML = html;
+                } else {
+                    listArea.innerHTML = '<div style="text-align:center; color:#555; font-size:12px; padding:20px;">No recent alerts.</div>';
+                }
+            });
+        }
+
+        function logNotification(phone, title, body, type) {
+            db.ref(`trackings/${phone}/notifications`).push({
+                title: title, body: body, type: type, time: Date.now()
+            });
+        }
+
+        // --- ADMIN GLOBAL BROADCAST ---
+        function sendGlobalAlert() {
+            const msg = document.getElementById('admin-global-msg').value.trim();
+            if(!msg) { showToast("Enter a message to broadcast.", "error"); return; }
+            
+            db.ref('global_alerts').push({
+                body: msg, time: Date.now()
+            }).then(() => {
+                showToast("Global Alert Transmitted to All Users!", "success");
+                document.getElementById('admin-global-msg').value = '';
+                logNotification('admin_system', "Sent Global Broadcast", msg, "global");
+            }).catch(e => showToast("Broadcast Failed", "error"));
+        }
+
+        let lastGlobalAlertTime = Date.now();
+        function startGlobalAlertListener(phoneToLog) {
+            db.ref('global_alerts').orderByChild('time').startAt(lastGlobalAlertTime).on('child_added', snap => {
+                const alert = snap.val();
+                if(alert.time > lastGlobalAlertTime) {
+                    showPushNotification("HQ EMERGENCY BROADCAST", alert.body, 'message');
+                    if(phoneToLog) {
+                        logNotification(phoneToLog, "Global Broadcast", alert.body, "global");
+                    }
+                }
+            });
+        }
+
+        // --- MAP REFRESH LOGIC ---
+        function forceRefreshMap(role) {
+            const iframe = document.getElementById(role + '-route-iframe');
+            if(iframe && iframe.src) {
+                const currentSrc = iframe.src;
+                iframe.src = '';
+                setTimeout(() => { 
+                    iframe.src = currentSrc; 
+                    showToast("Map routing engine refreshed.");
+                }, 100);
+            } else {
+                showToast("Map not loaded yet.", "error");
+            }
+        }
+
         // --- PREMIUM MEDIA VIEWER LOGIC ---
         function openPremiumMediaViewer(url, type, name) {
             const viewer = document.getElementById('premium-media-viewer');
@@ -843,6 +988,61 @@
             const container = document.getElementById('media-content-container');
             viewer.style.display = 'none';
             container.innerHTML = '';
+        }
+
+        // --- TRUE FULLSCREEN CHAT LOGIC (100% GAPLESS) ---
+        function expandChat(role) {
+            const container = document.getElementById(role + '-chat-container');
+            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
+            
+            if (!container.classList.contains('chat-fullscreen')) {
+                // Safely hide all siblings to allow chat to naturally fill 100% of the screen seamlessly
+                Array.from(view.children).forEach(child => {
+                    if (child.id !== role + '-chat-container' && child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+                        child.setAttribute('data-original-display', child.style.display);
+                        child.setAttribute('data-hidden-by-chat', 'true');
+                        child.style.setProperty('display', 'none', 'important');
+                    }
+                });
+                
+                view.style.padding = '0'; // Remove default view padding
+                container.style.margin = '0'; 
+                container.style.borderRadius = '0';
+                
+                container.classList.remove('chat-minimized');
+                container.classList.add('chat-fullscreen');
+                
+                document.body.classList.add('chat-locked'); 
+                document.getElementById(role + '-chat-compress').style.display = 'inline-block';
+                
+                const area = document.getElementById(role + '-chat-area');
+                setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+            }
+        }
+        
+        function minimizeChat(role, e) {
+            if(e) e.stopPropagation();
+            const container = document.getElementById(role + '-chat-container');
+            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
+            
+            // Restore siblings
+            Array.from(view.children).forEach(child => {
+                if (child.hasAttribute('data-hidden-by-chat')) {
+                    child.style.display = child.getAttribute('data-original-display') || '';
+                    child.removeAttribute('data-hidden-by-chat');
+                    child.removeAttribute('data-original-display');
+                }
+            });
+
+            view.style.padding = '';
+            container.style.margin = '';
+            container.style.borderRadius = '';
+
+            container.classList.remove('chat-fullscreen');
+            container.classList.add('chat-minimized');
+            
+            document.body.classList.remove('chat-locked');
+            document.getElementById(role + '-chat-compress').style.display = 'none';
         }
 
         // --- AUTO-LOGIN SYSTEM ---
@@ -1010,6 +1210,7 @@
 
         function toggleAttachMenu(role, e) {
             if(e) e.stopPropagation();
+            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-attach-menu');
             drawer.classList.toggle('show');
@@ -1017,6 +1218,7 @@
 
         function toggleStickerMenu(role, e) {
             if(e) e.stopPropagation();
+            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-sticker-menu');
             drawer.classList.toggle('show');
@@ -1038,6 +1240,7 @@
             if(e) e.stopPropagation();
             closeAllMenus();
             if (typeof closeMsgModal === 'function') closeMsgModal();
+            expandChat(role);
             
             let rawText = text.replace(/"/g, '"').replace(/'/g, "'");
             let shortText = rawText.length > 40 ? rawText.substring(0, 40) + '...' : rawText;
@@ -1257,6 +1460,7 @@
         async function startRecording(role, e) {
             if(e) e.stopPropagation();
             closeAllMenus();
+            expandChat(role);
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -1420,6 +1624,7 @@
         async function initCall(type, myRole, e) {
             if(e) e.stopPropagation();
             closeAllMenus();
+            expandChat(myRole);
             RTC.role = myRole;
             RTC.isCaller = true;
             RTC.targetPhone = myRole === 'admin' ? currentAdminTargetPhone : currentClientPhone;
@@ -1799,8 +2004,9 @@
             const status = bubbleElement.getAttribute('data-status');
             const readTime = bubbleElement.getAttribute('data-readtime');
             const isMe = bubbleElement.getAttribute('data-isme') === 'true';
+            const msgType = bubbleElement.getAttribute('data-msgtype');
 
-            activeMsgContext = { key, text, sender, role, isMe };
+            activeMsgContext = { key, text, sender, role, isMe, msgType };
 
             document.getElementById('modal-time-sent').innerText = time;
             if(isMe) {
@@ -1810,6 +2016,7 @@
             }
 
             document.getElementById('modal-btn-delete').style.display = isMe ? 'flex' : 'none';
+            document.getElementById('modal-btn-edit').style.display = (isMe && (!msgType || msgType === 'text' || msgType === 'undefined')) ? 'flex' : 'none';
             document.getElementById('msg-action-overlay').classList.add('active');
         }
 
@@ -1835,6 +2042,7 @@
                 closeMsgModal();
                 closeDispatchModal();
                 closePremiumMediaViewer();
+                closeNotifDrawer();
             }
         });
 
@@ -1842,6 +2050,19 @@
             if(!activeMsgContext) return;
             const targetPhone = activeMsgContext.role === 'admin' ? currentAdminTargetPhone : currentClientPhone;
             deleteChatMessage(targetPhone, activeMsgContext.key, null);
+            closeMsgModal();
+        }
+
+        function execModalEdit() {
+            if(!activeMsgContext) return;
+            const newText = prompt("Edit your message:", activeMsgContext.text.replace(/\\'/g, "'").replace(/\\"/g, '"'));
+            if(newText !== null && newText.trim() !== "") {
+                const targetPhone = activeMsgContext.role === 'admin' ? currentAdminTargetPhone : currentClientPhone;
+                db.ref(`trackings/${targetPhone}/client_messages/${activeMsgContext.key}`).update({
+                    text: newText.trim(),
+                    edited: true
+                }).then(() => showToast("Message successfully edited")).catch(() => showToast("Edit failed", "error"));
+            }
             closeMsgModal();
         }
 
@@ -2080,6 +2301,12 @@
         // --- LIVE ROUTE ENGINE ---
         function updateLiveRouteMap(role) {
             if (globalAdminLat && globalAdminLng && globalClientEventLat && globalClientEventLng) {
+                const aLat = parseFloat(globalAdminLat).toFixed(3);
+                const aLng = parseFloat(globalAdminLng).toFixed(3);
+                const cLat = parseFloat(globalClientEventLat).toFixed(3);
+                const cLng = parseFloat(globalClientEventLng).toFixed(3);
+                const routeId = `${aLat},${aLng}-${cLat},${cLng}`;
+
                 const mapUrl = `https://maps.google.com/maps?saddr=${globalAdminLat},${globalAdminLng}&daddr=${globalClientEventLat},${globalClientEventLng}&output=embed`;
                 const extUrl = `https://www.google.com/maps/dir/?api=1&origin=${globalAdminLat},${globalAdminLng}&destination=${globalClientEventLat},${globalClientEventLng}`;
                 
@@ -2089,7 +2316,10 @@
                     const extLink = document.getElementById('admin-route-ext-link');
                     if(card) {
                         card.style.display = 'block';
-                        if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                        if (iframe.getAttribute('data-route-id') !== routeId) {
+                            iframe.src = mapUrl;
+                            iframe.setAttribute('data-route-id', routeId);
+                        }
                         if (extLink) extLink.href = extUrl;
                     }
                 } else if (role === 'client') {
@@ -2098,7 +2328,10 @@
                     const extLink = document.getElementById('client-route-ext-link');
                     if(card) {
                         card.style.display = 'block';
-                        if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                        if (iframe.getAttribute('data-route-id') !== routeId) {
+                            iframe.src = mapUrl;
+                            iframe.setAttribute('data-route-id', routeId);
+                        }
                         if (extLink) extLink.href = extUrl;
                     }
                 }
@@ -2133,6 +2366,8 @@
                 document.getElementById('login-phone').value = ''; document.getElementById('login-pin').value = '';
                 switchView('view-admin');
                 startAdminHistoryListener(); 
+                startGlobalAlertListener('admin_system');
+                logNotification('admin_system', "System Access", `Admin command center accessed via ${phone}`, "login");
                 showToast("Admin Protocol Authorized");
                 return;
             }
@@ -2165,8 +2400,11 @@
                         presenceRef.set({ status: 'online', lastSeen: Date.now() });
                         presenceRef.onDisconnect().set({ status: 'offline', lastSeen: firebase.database.ServerValue.TIMESTAMP });
 
+                        logNotification(currentClientPhone, "Security Handshake", `Device successfully synced.`, "login");
+                        
                         startClientWatchListeners(); 
                         listenForCalls('client'); 
+                        startGlobalAlertListener(currentClientPhone);
                         switchView('view-client');
                         showToast(`Welcome, ${currentClientName}`);
                     } else {
@@ -2341,6 +2579,8 @@
                             replyHtml = `<div class="chat-reply-context"><div class="sender">${senderName}</div>${escapeHTML(m.replyToText)}</div>`;
                         }
 
+                        const editedHtml = m.edited ? `<span style="font-size:9px; opacity:0.6; font-style:italic; margin-left:5px;">(edited)</span>` : '';
+
                         let messageContentHtml = '';
                         if (m.type === 'image' || m.type === 'camera') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block; border: 1px solid rgba(255,255,255,0.1);" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'image', 'Image Media')">`;
@@ -2369,7 +2609,7 @@
                         } else if (m.type === 'sticker') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="width: 120px; height: 120px; background: transparent; display:block;">`;
                         } else {
-                            messageContentHtml = `<div>${safeTextUI}</div>`;
+                            messageContentHtml = `<div>${safeTextUI} ${editedHtml}</div>`;
                         }
 
                         let statusHtml = '';
@@ -2385,7 +2625,7 @@
                                 <div class="chat-bubble ${bubbleClass}" id="msg-${key}"
                                     data-key="${key}" data-text="${safeTextJS}" data-sender="${m.sender}" 
                                     data-time="${escapeHTML(m.time)}" data-readtime="${escapeHTML(m.readTime||'')} " 
-                                    data-status="${m.status}" data-isme="${isMe}"
+                                    data-status="${m.status}" data-isme="${isMe}" data-msgtype="${m.type||'text'}"
                                     onmousedown="handleMouseDown(event, this, 'admin')" onmouseup="handleMouseUp(event)" onmouseleave="handleMouseLeave(event)"
                                     ontouchstart="handleTouchStart(event, this, 'admin')" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event, this, 'admin')">
                                     ${replyHtml}
@@ -2398,7 +2638,9 @@
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).update(updatesToRead); }
                     isChatInitialLoad = false; area.innerHTML = html; 
-                    setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+                    if(document.getElementById('admin-chat-container').classList.contains('chat-fullscreen')){
+                        area.scrollTop = area.scrollHeight; 
+                    }
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2619,6 +2861,8 @@
                             replyHtml = `<div class="chat-reply-context"><div class="sender">${senderName}</div>${escapeHTML(m.replyToText)}</div>`;
                         }
 
+                        const editedHtml = m.edited ? `<span style="font-size:9px; opacity:0.6; font-style:italic; margin-left:5px;">(edited)</span>` : '';
+
                         let messageContentHtml = '';
                         if (m.type === 'image' || m.type === 'camera') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="max-width: 100%; border-radius: 8px; cursor: pointer; display:block; border: 1px solid rgba(255,255,255,0.1);" onclick="openPremiumMediaViewer('${escapeHTML(m.mediaUrl)}', 'image', 'Image Media')">`;
@@ -2647,7 +2891,7 @@
                         } else if (m.type === 'sticker') {
                             messageContentHtml = `<img src="${escapeHTML(m.mediaUrl)}" style="width: 120px; height: 120px; background: transparent; display:block;">`;
                         } else {
-                            messageContentHtml = `<div>${safeTextUI}</div>`; 
+                            messageContentHtml = `<div>${safeTextUI} ${editedHtml}</div>`; 
                         }
 
                         let statusHtml = '';
@@ -2663,7 +2907,7 @@
                                 <div class="chat-bubble ${bubbleClass}" id="cmsg-${key}"
                                     data-key="${key}" data-text="${safeTextJS}" data-sender="${m.sender}" 
                                     data-time="${escapeHTML(m.time)}" data-readtime="${escapeHTML(m.readTime||'')} " 
-                                    data-status="${m.status}" data-isme="${isMe}"
+                                    data-status="${m.status}" data-isme="${isMe}" data-msgtype="${m.type||'text'}"
                                     onmousedown="handleMouseDown(event, this, 'client')" onmouseup="handleMouseUp(event)" onmouseleave="handleMouseLeave(event)"
                                     ontouchstart="handleTouchStart(event, this, 'client')" ontouchmove="handleTouchMove(event)" ontouchend="handleTouchEnd(event, this, 'client')">
                                     ${replyHtml}
@@ -2676,7 +2920,9 @@
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentClientPhone}/client_messages`).update(updatesToRead); }
                     isChatInitialLoad = false; area.innerHTML = html; 
-                    setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
+                    if(document.getElementById('client-chat-container').classList.contains('chat-fullscreen')){
+                        area.scrollTop = area.scrollHeight; 
+                    }
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
