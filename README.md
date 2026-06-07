@@ -48,9 +48,6 @@
         body, html { width: 100%; height: 100dvh; max-width: 100%; background: var(--bg-dark); color: #fff; overflow: hidden; display: flex; justify-content: center; align-items: flex-start; overscroll-behavior-y: none; }
         input, textarea { user-select: auto; -webkit-user-select: auto; }
 
-        /* Flawless Background Lock for Chat */
-        body.chat-locked { overflow: hidden !important; touch-action: none !important; position: fixed !important; width: 100% !important; height: 100% !important; }
-
         .bg-map {
             position: fixed; inset: 0; z-index: -1; opacity: 0.15;
             background-image: 
@@ -132,18 +129,14 @@
         .card h3 { color: var(--gold); font-family: 'Cinzel'; margin-bottom: 12px; font-size: 15px; border-bottom: 1px dashed rgba(212,175,55,0.3); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 
         /* =========================================================================
-           WHATSAPP-STYLE CHAT ENGINE & DYNAMIC SIZING
+           WHATSAPP-STYLE CHAT ENGINE - NATIVE DIRECT FULLSCREEN
            ========================================================================= */
-        .chat-card { padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        
-        /* Interactive Chat Sizing (Fully Fixed to Absolute 100% Zero-Gap Viewport) */
-        .chat-minimized { height: 30vh !important; max-height: 350px !important; }
-        .chat-fullscreen { 
-            position: fixed !important; inset: 0 !important; top: 0 !important; bottom: 0 !important; 
-            left: 0 !important; right: 0 !important; height: 100% !important; min-height: 100dvh !important; 
-            max-width: 100vw !important; width: 100vw !important; z-index: 9999999 !important; 
-            border-radius: 0 !important; margin: 0 !important; border: none !important;
-            background: var(--wa-bg) !important; padding-bottom: env(safe-area-inset-bottom) !important;
+        .chat-card { 
+            padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; background: var(--wa-bg) !important; 
+            margin-bottom: 15px; width: 100%; max-width: 600px; flex-shrink:0; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); 
+            height: 75vh; min-height: 500px; /* Fully expanded dominant view */
         }
 
         .chat-header { background: var(--wa-header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; z-index: 2; box-shadow: 0 2px 10px rgba(0,0,0,0.5); flex-shrink: 0; }
@@ -571,15 +564,17 @@
         </div>
 
         <!-- NEW: ADMIN LIVE ROUTE MAP -->
-        <div class="card" id="admin-route-card" style="display:none; border-color: var(--brand-purple); background:rgba(124,58,237,0.05); padding: 12px;">
-            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:10px; font-size:14px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
-            <div class="map-wrapper" style="height: 180px; margin-bottom: 0; border-color: rgba(124,58,237,0.3);">
+        <div class="card" id="admin-route-card" style="display:none; border-color: var(--brand-purple); background:rgba(124,58,237,0.05); padding: 15px; width: 100%; max-width: 100%;">
+            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:15px; font-size:16px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
+            <div class="map-wrapper" style="height: 350px; margin-bottom: 15px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
                 <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
                 <iframe id="admin-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
             </div>
+            <a id="admin-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:13px; padding:14px; text-decoration:none; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN ROUTE IN GOOGLE MAPS</a>
         </div>
 
-        <div class="chat-card chat-minimized" id="admin-chat-container" onclick="expandChat('admin')" ontouchstart="expandChat('admin')">
+        <!-- NATIVE FULLSCREEN CHAT CARD -->
+        <div class="chat-card" id="admin-chat-container">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--neon-cyan); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-user-tie"></i></div>
@@ -589,7 +584,6 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
-                    <i class="fas fa-compress-alt" id="admin-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('admin', event)"></i>
                     <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'admin', event)"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'admin', event)"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'admin', event)"></i>
@@ -636,7 +630,7 @@
                         <i class="fas fa-camera" id="admin-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." onfocus="expandChat('admin')" oninput="handleInputTyping('admin')">
+                    <input type="text" id="admin-chat-input" class="modern-input" placeholder="Message Client..." oninput="handleInputTyping('admin')">
                     
                     <div class="modern-right-icons" id="admin-right-icons">
                         <i class="fas fa-microphone" onclick="startRecording('admin', event)"></i>
@@ -719,15 +713,17 @@
         </div>
 
         <!-- NEW: CLIENT LIVE ROUTE MAP -->
-        <div class="card" id="client-route-card" style="display:none; max-width:100%; width:100%; padding:12px; flex-shrink:0; border-color: var(--brand-purple); background:rgba(124,58,237,0.05);">
-            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:10px; font-size:14px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
-            <div class="map-wrapper" style="height: 180px; margin-bottom: 0; border-color: rgba(124,58,237,0.3);">
+        <div class="card" id="client-route-card" style="display:none; max-width:100%; width:100%; padding:15px; flex-shrink:0; border-color: var(--brand-purple); background:rgba(124,58,237,0.05);">
+            <h3 style="color:var(--brand-purple); border-bottom-color:rgba(124,58,237,0.3); margin-bottom:15px; font-size:16px;"><i class="fas fa-route"></i> Live Delivery Route</h3>
+            <div class="map-wrapper" style="height: 350px; margin-bottom: 15px; border-color: rgba(124,58,237,0.3); border-width: 3px;">
                 <div class="map-loader"><i class="fas fa-satellite-dish fa-spin fa-2x" style="margin-bottom:8px;"></i><br>CALCULATING ROUTE...</div>
                 <iframe id="client-route-iframe" class="map-iframe" src="" onload="this.classList.add('loaded')"></iframe>
             </div>
+            <a id="client-route-ext-link" href="#" target="_blank" class="mn-btn btn-green" style="font-size:13px; padding:14px; text-decoration:none; background: linear-gradient(135deg, var(--brand-purple) 0%, #9333ea 100%); box-shadow: 0 5px 20px rgba(124,58,237,0.4); border:none;"><i class="fas fa-external-link-alt"></i> OPEN ROUTE IN GOOGLE MAPS</a>
         </div>
 
-        <div class="chat-card chat-minimized" id="client-chat-container" onclick="expandChat('client')" ontouchstart="expandChat('client')">
+        <!-- NATIVE FULLSCREEN CHAT CARD -->
+        <div class="chat-card" id="client-chat-container">
             <div class="chat-header">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <div style="width:35px; height:35px; border-radius:50%; background:var(--gold); display:flex; justify-content:center; align-items:center; color:#000; font-size:16px;"><i class="fas fa-headset"></i></div>
@@ -737,7 +733,6 @@
                     </div>
                 </div>
                 <div style="display:flex; align-items:center; gap:18px; color:var(--gold); font-size:18px;">
-                    <i class="fas fa-compress-alt" id="client-chat-compress" style="display:none; cursor:pointer; color:var(--neon-green);" onclick="minimizeChat('client', event)"></i>
                     <i class="fas fa-desktop" style="cursor:pointer;" onclick="initCall('screen', 'client', event)"></i>
                     <i class="fas fa-video" style="cursor:pointer;" onclick="initCall('video', 'client', event)"></i>
                     <i class="fas fa-phone-alt" style="cursor:pointer;" onclick="initCall('audio', 'client', event)"></i>
@@ -784,7 +779,7 @@
                         <i class="fas fa-camera" id="client-left-icon"></i>
                     </button>
                     
-                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." onfocus="expandChat('client')" oninput="handleInputTyping('client')">
+                    <input type="text" id="client-chat-input" class="modern-input" placeholder="Message HQ..." oninput="handleInputTyping('client')">
                     
                     <div class="modern-right-icons" id="client-right-icons">
                         <i class="fas fa-microphone" onclick="startRecording('client', event)"></i>
@@ -848,61 +843,6 @@
             const container = document.getElementById('media-content-container');
             viewer.style.display = 'none';
             container.innerHTML = '';
-        }
-
-        // --- TRUE FULLSCREEN CHAT LOGIC (100% GAPLESS) ---
-        function expandChat(role) {
-            const container = document.getElementById(role + '-chat-container');
-            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
-            
-            if (!container.classList.contains('chat-fullscreen')) {
-                // Safely hide all siblings to allow chat to naturally fill 100% of the screen seamlessly
-                Array.from(view.children).forEach(child => {
-                    if (child.id !== role + '-chat-container' && child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
-                        child.setAttribute('data-original-display', child.style.display);
-                        child.setAttribute('data-hidden-by-chat', 'true');
-                        child.style.setProperty('display', 'none', 'important');
-                    }
-                });
-                
-                view.style.padding = '0'; // Remove default view padding
-                container.style.margin = '0'; 
-                container.style.borderRadius = '0';
-                
-                container.classList.remove('chat-minimized');
-                container.classList.add('chat-fullscreen');
-                
-                document.body.classList.add('chat-locked'); 
-                document.getElementById(role + '-chat-compress').style.display = 'inline-block';
-                
-                const area = document.getElementById(role + '-chat-area');
-                setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
-            }
-        }
-        
-        function minimizeChat(role, e) {
-            if(e) e.stopPropagation();
-            const container = document.getElementById(role + '-chat-container');
-            const view = document.getElementById(role === 'admin' ? 'view-admin-session' : 'view-client');
-            
-            // Restore siblings
-            Array.from(view.children).forEach(child => {
-                if (child.hasAttribute('data-hidden-by-chat')) {
-                    child.style.display = child.getAttribute('data-original-display') || '';
-                    child.removeAttribute('data-hidden-by-chat');
-                    child.removeAttribute('data-original-display');
-                }
-            });
-
-            view.style.padding = '';
-            container.style.margin = '';
-            container.style.borderRadius = '';
-
-            container.classList.remove('chat-fullscreen');
-            container.classList.add('chat-minimized');
-            
-            document.body.classList.remove('chat-locked');
-            document.getElementById(role + '-chat-compress').style.display = 'none';
         }
 
         // --- AUTO-LOGIN SYSTEM ---
@@ -1070,7 +1010,6 @@
 
         function toggleAttachMenu(role, e) {
             if(e) e.stopPropagation();
-            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-attach-menu');
             drawer.classList.toggle('show');
@@ -1078,7 +1017,6 @@
 
         function toggleStickerMenu(role, e) {
             if(e) e.stopPropagation();
-            expandChat(role);
             closeAllMenus();
             const drawer = document.getElementById(role + '-sticker-menu');
             drawer.classList.toggle('show');
@@ -1100,7 +1038,6 @@
             if(e) e.stopPropagation();
             closeAllMenus();
             if (typeof closeMsgModal === 'function') closeMsgModal();
-            expandChat(role);
             
             let rawText = text.replace(/"/g, '"').replace(/'/g, "'");
             let shortText = rawText.length > 40 ? rawText.substring(0, 40) + '...' : rawText;
@@ -1320,7 +1257,6 @@
         async function startRecording(role, e) {
             if(e) e.stopPropagation();
             closeAllMenus();
-            expandChat(role);
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -1484,7 +1420,6 @@
         async function initCall(type, myRole, e) {
             if(e) e.stopPropagation();
             closeAllMenus();
-            expandChat(myRole);
             RTC.role = myRole;
             RTC.isCaller = true;
             RTC.targetPhone = myRole === 'admin' ? currentAdminTargetPhone : currentClientPhone;
@@ -2146,20 +2081,25 @@
         function updateLiveRouteMap(role) {
             if (globalAdminLat && globalAdminLng && globalClientEventLat && globalClientEventLng) {
                 const mapUrl = `https://maps.google.com/maps?saddr=${globalAdminLat},${globalAdminLng}&daddr=${globalClientEventLat},${globalClientEventLng}&output=embed`;
+                const extUrl = `https://www.google.com/maps/dir/?api=1&origin=${globalAdminLat},${globalAdminLng}&destination=${globalClientEventLat},${globalClientEventLng}`;
                 
                 if (role === 'admin') {
                     const card = document.getElementById('admin-route-card');
                     const iframe = document.getElementById('admin-route-iframe');
+                    const extLink = document.getElementById('admin-route-ext-link');
                     if(card) {
                         card.style.display = 'block';
                         if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                        if (extLink) extLink.href = extUrl;
                     }
                 } else if (role === 'client') {
                     const card = document.getElementById('client-route-card');
                     const iframe = document.getElementById('client-route-iframe');
+                    const extLink = document.getElementById('client-route-ext-link');
                     if(card) {
                         card.style.display = 'block';
                         if (iframe.src !== mapUrl) iframe.src = mapUrl;
+                        if (extLink) extLink.href = extUrl;
                     }
                 }
             }
@@ -2458,9 +2398,7 @@
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentAdminTargetPhone}/client_messages`).update(updatesToRead); }
                     isChatInitialLoad = false; area.innerHTML = html; 
-                    if(document.getElementById('admin-chat-container').classList.contains('chat-fullscreen')){
-                        area.scrollTop = area.scrollHeight; 
-                    }
+                    setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
@@ -2738,9 +2676,7 @@
                     
                     if(Object.keys(updatesToRead).length > 0) { db.ref(`trackings/${currentClientPhone}/client_messages`).update(updatesToRead); }
                     isChatInitialLoad = false; area.innerHTML = html; 
-                    if(document.getElementById('client-chat-container').classList.contains('chat-fullscreen')){
-                        area.scrollTop = area.scrollHeight; 
-                    }
+                    setTimeout(() => { area.scrollTop = area.scrollHeight; }, 50);
                 } else {
                     area.innerHTML = '<div style="font-size:12px; color:rgba(255,255,255,0.5); text-align:center; margin: auto; background:rgba(0,0,0,0.4); padding:6px 12px; border-radius:12px;">End-to-end encrypted chat started</div>';
                     isChatInitialLoad = false;
