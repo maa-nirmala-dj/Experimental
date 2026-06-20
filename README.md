@@ -5010,11 +5010,313 @@
                 <a href="https://www.youtube.com/channel/UCQPUgEyCm8nihqhYGMUX6Pw" target="_blank" class="card full-w" onclick="playTap()"><i class="fab fa-youtube"></i><span>YouTube Channel</span></a>
             </div>
 
-            <div class="section-label"><i class="fas fa-laptop-code"></i> OFFICIAL WEBSITES</div>
-            <div class="grid">
-                <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="card full-w" onclick="playTap()"><i class="fas fa-globe"></i><span>MND Official Site 1</span></a>
-                <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="card full-w" onclick="playTap()"><i class="fas fa-external-link-alt"></i><span>MND Official Site 2</span></a>
+            <div class="mnd-premium-wrapper">
+    <style>
+        /* ==========================================================================
+           MND PREMIUM UI COMPONENT STYLES
+           Advanced CSS Architecture with Glassmorphism & Neon Glowing Effects
+           ========================================================================== */
+        
+        .mnd-premium-wrapper {
+            --mnd-bg-base: rgba(15, 23, 42, 0.7);
+            --mnd-border-light: rgba(255, 255, 255, 0.08);
+            --mnd-accent-1: #00f2fe;
+            --mnd-accent-2: #4facfe;
+            --mnd-accent-pay: #f6d365;
+            --mnd-accent-track: #ff0844;
+            --mnd-accent-creator: #b224ef;
+            --mnd-text-main: #ffffff;
+            --mnd-text-muted: #94a3b8;
+            --mnd-transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px 0;
+            padding: 25px;
+            background: linear-gradient(145deg, rgba(20,20,30,0.8) 0%, rgba(10,10,15,0.95) 100%);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--mnd-border-light);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Glow */
+        .mnd-premium-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, rgba(79, 172, 254, 0.05) 0%, transparent 50%);
+            animation: mnd-rotate-glow 15s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes mnd-rotate-glow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .mnd-section-label {
+            position: relative;
+            z-index: 1;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--mnd-text-main);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-shadow: 0 2px 10px rgba(0, 242, 254, 0.4);
+            border-bottom: 2px solid rgba(255,255,255,0.05);
+            padding-bottom: 15px;
+        }
+
+        .mnd-section-label i {
+            color: var(--mnd-accent-1);
+            animation: mnd-pulse 2s infinite;
+        }
+
+        @keyframes mnd-pulse {
+            0% { transform: scale(1); text-shadow: 0 0 0 rgba(0, 242, 254, 0.7); }
+            50% { transform: scale(1.1); text-shadow: 0 0 15px rgba(0, 242, 254, 0.9); }
+            100% { transform: scale(1); text-shadow: 0 0 0 rgba(0, 242, 254, 0); }
+        }
+
+        .mnd-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .mnd-card {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: var(--mnd-bg-base);
+            border: 1px solid var(--mnd-border-light);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--mnd-text-main);
+            overflow: hidden;
+            transition: var(--mnd-transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            group: hover;
+        }
+
+        .mnd-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s ease;
+        }
+
+        .mnd-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .mnd-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: rgba(255,255,255,0.3);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(79, 172, 254, 0.2);
+            background: rgba(30, 41, 59, 0.8);
+        }
+
+        .mnd-card-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .mnd-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.05);
+            font-size: 1.2rem;
+            transition: var(--mnd-transition);
+        }
+
+        .mnd-card:hover .mnd-icon-wrapper {
+            background: linear-gradient(135deg, var(--mnd-accent-1), var(--mnd-accent-2));
+            color: #000;
+            box-shadow: 0 0 15px var(--mnd-accent-1);
+        }
+
+        /* Specific Icon Hover Colors for specific cards */
+        .card-pay:hover .mnd-icon-wrapper {
+            background: linear-gradient(135deg, #fda085, var(--mnd-accent-pay));
+            box-shadow: 0 0 15px var(--mnd-accent-pay);
+        }
+        .card-track:hover .mnd-icon-wrapper {
+            background: linear-gradient(135deg, #ff0844, #ffb199);
+            box-shadow: 0 0 15px var(--mnd-accent-track);
+        }
+        .card-creator:hover .mnd-icon-wrapper {
+            background: linear-gradient(135deg, var(--mnd-accent-creator), #7579ff);
+            box-shadow: 0 0 15px var(--mnd-accent-creator);
+        }
+
+        .mnd-text-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mnd-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .mnd-card-subtitle {
+            font-size: 0.8rem;
+            color: var(--mnd-text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .mnd-action-arrow {
+            color: var(--mnd-text-muted);
+            font-size: 1.2rem;
+            transition: var(--mnd-transition);
+        }
+
+        .mnd-card:hover .mnd-action-arrow {
+            color: var(--mnd-text-main);
+            transform: translateX(5px);
+        }
+
+        /* Active Ping Indicator for Live sites */
+        .live-ping {
+            position: relative;
+            display: flex;
+            width: 10px;
+            height: 10px;
+            margin-left: 8px;
+        }
+        .live-ping::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #10b981;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        .live-ping::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #10b981;
+        }
+        @keyframes ping {
+            75%, 100% { transform: scale(2.5); opacity: 0; }
+        }
+    </style>
+
+    <div class="mnd-section-label">
+        <i class="fas fa-laptop-code"></i> OFFICIAL WEBSITES & ECOSYSTEM
+    </div>
+
+    <div class="mnd-grid">
+        
+        <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="mnd-card" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title">MND Official Site 1</span>
+                    <span class="mnd-card-subtitle">Main Portal</span>
+                </div>
             </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+        <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="mnd-card" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-external-link-alt"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title">MND Official Site 2</span>
+                    <span class="mnd-card-subtitle">Backup / Alternate</span>
+                </div>
+            </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+        <a href="https://maanirmaladjlivetracking.vercel.app/" target="_blank" class="mnd-card card-track" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title" style="display:flex; align-items:center;">Live Tracking <span class="live-ping"></span></span>
+                    <span class="mnd-card-subtitle">GPS System</span>
+                </div>
+            </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+        <a href="https://maanirmaladj-pay.vercel.app/" target="_blank" class="mnd-card card-pay" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title">MND Pay</span>
+                    <span class="mnd-card-subtitle">Secure Transactions</span>
+                </div>
+            </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+        <a href="https://maanirmaladj-asset.vercel.app/" target="_blank" class="mnd-card card-track" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title" style="display:flex; align-items:center;">Live Asset Track <span class="live-ping"></span></span>
+                    <span class="mnd-card-subtitle">Inventory Management</span>
+                </div>
+            </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+        <a href="https://maanirmaladj-creator.vercel.app/" target="_blank" class="mnd-card card-creator" onclick="playTap()">
+            <div class="mnd-card-content">
+                <div class="mnd-icon-wrapper">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <div class="mnd-text-group">
+                    <span class="mnd-card-title">Creator Studio</span>
+                    <span class="mnd-card-subtitle">Media & Production</span>
+                </div>
+            </div>
+            <i class="fas fa-arrow-right mnd-action-arrow"></i>
+        </a>
+
+    </div>
+</div>
 
             <div class="section-label"><i class="fas fa-coins"></i> PAYMENTS & MORE</div>
             <div class="grid" style="margin-bottom:30px;">
