@@ -5237,7 +5237,7 @@
 
     <div class="mnd-grid">
         
-        <a href="https://maa-nirmala-dj.github.io/-tent-house./" target="_blank" class="mnd-card" onclick="playTap()">
+        <a href="https://maanirmaladj.vercel.app/./" target="_blank" class="mnd-card" onclick="playTap()">
             <div class="mnd-card-content">
                 <div class="mnd-icon-wrapper">
                     <i class="fas fa-globe"></i>
